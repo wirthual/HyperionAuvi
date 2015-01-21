@@ -1,0 +1,39 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="HypeAudioVisualizer Settings"
+        android:key="pref_hyperion">
+        <EditTextPreference
+            android:key="ip"
+            android:summary="IP adress of the hyperion server"
+            android:title="IP adress"
+            android:defaultValue="192.168.100.101" />
+        <EditTextPreference
+            android:key="port"
+            android:summary="Port of the hyperion server"
+            android:title="Port"
+            android:defaultValue="9090"/>
+        <EditTextPreference
+            android:key="topBottom"
+            android:summary="Number of Leds on Top and on Bottom"
+            android:title="Top/Bottom Leds"
+            android:defaultValue="40"
+            android:numeric="integer"/>
+
+        <EditTextPreference
+            android:key="leftRight"
+            android:summary="Number of Leds on the Left and on the Right"
+            android:title="Left/Right Leds"
+            android:numeric="integer"
+            android:defaultValue="24"
+            />
+        <EditTextPreference
+            android:key="rate"
+            android:summary="Value to decrease data sending. The higher the vslue, the lower data-rate."
+            android:title="Data Rate"
+            android:numeric="integer"
+            android:defaultValue="2"
+            android:inputType="numberDecimal"
+            />
+    </PreferenceCategory>
+</PreferenceScreen>
