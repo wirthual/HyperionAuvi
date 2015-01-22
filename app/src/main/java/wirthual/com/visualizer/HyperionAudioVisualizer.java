@@ -11,9 +11,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class AudioFxDemo extends ActionBarActivity {
+public class HyperionAudioVisualizer extends ActionBarActivity {
 
-    String TAG = "Activity";
+    String TAG = "HyperionAudioVisualizer";
 
     Visualizer mVisualizer;
 
@@ -69,17 +69,16 @@ public class AudioFxDemo extends ActionBarActivity {
         int leftRightLeds = Integer.valueOf(prefs.getString("leftRight", "24"));
         Log.i("Number Leds Left/Right: " + String.valueOf(leftRightLeds), TAG);
 
-        processor = new AudioFttProcessor(topBottomLeds, leftRightLeds);
-        processor.openWebSocket(ip, port);
 
         mVisualizer = new Visualizer(0);
         int minRange = Visualizer.getCaptureSizeRange()[0];
         Log.i(TAG, String.valueOf(minRange));
-
         int maxRange = Visualizer.getCaptureSizeRange()[1];
         Log.i(TAG, String.valueOf(maxRange));
+        mVisualizer.setCaptureSize(minRange);
 
-        mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[0]);
+        processor = new AudioFttProcessor(topBottomLeds, leftRightLeds);
+        processor.openWebSocket(ip, port);
 
         AudioDataListener listener = new AudioDataListener(processor);
 
@@ -93,7 +92,7 @@ public class AudioFxDemo extends ActionBarActivity {
     protected void onPause() {
         super.onPause();
 
-        mVisualizer.setEnabled(false);
-        processor.closeWebSocket();
+        //mVisualizer.setEnabled(false);
+        //processor.closeWebSocket();
     }
 }

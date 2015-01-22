@@ -57,7 +57,10 @@ public class AudioFttProcessor {
 
         if (webSocketClient != null && webSocketClient.getReadyState() == WebSocket.READYSTATE.OPEN) {
             JSONObject result = currentEffect.processData(bytes);
-            webSocketClient.send(result.toString());
+
+            String withNewLine = result.toString() + "\n";
+
+            webSocketClient.send(withNewLine);
         }
     }
 }
