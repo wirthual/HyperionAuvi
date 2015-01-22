@@ -1,6 +1,4 @@
-package wirthual.com.visualizer;
-
-import org.json.JSONObject;
+package wirthual.com.visualizer.effects;
 
 /**
  * Created by devbuntu on 21.01.15.
@@ -20,7 +18,7 @@ abstract class Effect {
         totalLeds = 2*topBottom + 2*leftRight;
     }
 
-    abstract JSONObject processData(byte[] bytes);
+    abstract String processData(byte[] bytes);
 
     public abstract String getName();
 

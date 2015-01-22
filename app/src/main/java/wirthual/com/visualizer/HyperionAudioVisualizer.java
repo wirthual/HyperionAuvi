@@ -16,8 +16,8 @@ public class HyperionAudioVisualizer extends ActionBarActivity {
     String TAG = "HyperionAudioVisualizer";
 
     Visualizer mVisualizer;
+    AudioDataListener listener;
 
-    AudioFttProcessor processor = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,12 +77,14 @@ public class HyperionAudioVisualizer extends ActionBarActivity {
         Log.i(TAG, String.valueOf(maxRange));
         mVisualizer.setCaptureSize(minRange);
 
-        processor = new AudioFttProcessor(topBottomLeds, leftRightLeds);
-        processor.openWebSocket(ip, port);
+        //processor = new AudioFttProcessor(topBottomLeds, leftRightLeds);
+        //processor.openWebSocket(ip, port);
 
-        AudioDataListener listener = new AudioDataListener(processor);
+         listener = new AudioDataListener(topBottomLeds,leftRightLeds);
+
 
         mVisualizer.setDataCaptureListener(listener, Visualizer.getMaxCaptureRate() / intRate, false, true);
+        listener.openWebSocket(ip,port);
 
         mVisualizer.setEnabled(true);
 
@@ -91,8 +93,7 @@ public class HyperionAudioVisualizer extends ActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
-        //mVisualizer.setEnabled(false);
-        //processor.closeWebSocket();
+        listener.closeWebSocket();
+        mVisualizer.setEnabled(false);
     }
 }
