@@ -1,18 +1,19 @@
 package wirthual.com.visualizer;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.audiofx.Visualizer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import wirthual.com.visualizer.effects.TestEffect;
 import wirthual.com.visualizer.effects.ThreeZonesEffect;
+import wirthual.com.visualizer.service.AudioAnalyzeService;
 
 
 public class HyperionAudioVisualizer extends ActionBarActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -67,7 +68,7 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements Shared
     protected void onResume() {
         super.onResume();
 
-        String ip = prefs.getString("ip", "192.168.2.105");
+        /*String ip = prefs.getString("ip", "192.168.2.105");
         String port = prefs.getString("port", "19444");
 
         String rate = prefs.getString("rate", "2");
@@ -100,15 +101,19 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements Shared
         mVisualizer.setDataCaptureListener(eff, Visualizer.getMaxCaptureRate() / 4, false, true);
         mVisualizer.setCaptureSize(128);
 
-        mVisualizer.setEnabled(true);
+        mVisualizer.setEnabled(true);*/
+        if(!isMyServiceRunning(AudioAnalyzeService.class)) {
+            Intent intent = new Intent(this, AudioAnalyzeService.class);
+            this.getApplicationContext().startService(intent);
+        }
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        listener.closeWebSocket();
-        mVisualizer.setEnabled(false);
+       /* listener.closeWebSocket();
+        mVisualizer.setEnabled(false);*/
     }
 
     @Override
@@ -129,5 +134,15 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements Shared
                 e.commit();
             }
         }
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -11,6 +11,13 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <service
+            android:name="wirthual.com.visualizer.service.AudioAnalyzeService"
+            android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
+            android:label="AudioAnalyzeService"
+            >
+        </service>
+
         <activity
             android:name=".HyperionAudioVisualizer"
             android:label="@string/app_name"

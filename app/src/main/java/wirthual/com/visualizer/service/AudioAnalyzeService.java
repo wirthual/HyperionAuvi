@@ -1,6 +1,6 @@
 package wirthual.com.visualizer.service;
 
-import android.app.IntentService;
+import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.audiofx.Visualizer;
@@ -8,13 +8,12 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import wirthual.com.visualizer.effects.TestEffect;
 import wirthual.com.visualizer.effects.ThreeZonesEffect;
 
 /**
  * Created by devbuntu on 24.01.15.
  */
-public class AudioAnalyzeService extends IntentService {
+public class AudioAnalyzeService extends Service {
 
     public static final String TAG ="AudioService";
     public static final int THREEZONESEFFECT =1;
@@ -26,23 +25,20 @@ public class AudioAnalyzeService extends IntentService {
 
     SharedPreferences prefs;
 
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
-     * @param name Used to name the worker thread, important only for debugging.
-     */
-    public AudioAnalyzeService(String name) {
-        super(name);
-        prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-    }
 
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
+
     @Override
-    public void onHandleIntent(Intent intent){
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.i("Service started",TAG);
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
+
         String ip = prefs.getString("ip", "192.168.2.105");
         String port = prefs.getString("port", "19444");
 
@@ -71,13 +67,22 @@ public class AudioAnalyzeService extends IntentService {
         listener = new ThreeZonesEffect(this,topBottomLeds,leftRightLeds);
         listener.openWebSocket(ip,port);
 
-        TestEffect eff = new TestEffect();
+        //TestEffect eff = new TestEffect();
 
-        mVisualizer.setDataCaptureListener(eff, Visualizer.getMaxCaptureRate() / 4, false, true);
+        mVisualizer.setDataCaptureListener(listener, Visualizer.getMaxCaptureRate() / 4, false, true);
         mVisualizer.setCaptureSize(128);
 
         mVisualizer.setEnabled(true);
 
 
+
+        return Service.START_NOT_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i("Service stopped",TAG);
+        mVisualizer.setEnabled(false);
     }
 }
