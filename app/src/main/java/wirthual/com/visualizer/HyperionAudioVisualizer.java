@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import wirthual.com.visualizer.effects.TestEffect;
 import wirthual.com.visualizer.effects.ThreeZonesEffect;
 
 
@@ -94,8 +95,10 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements Shared
         listener = new ThreeZonesEffect(this,topBottomLeds,leftRightLeds);
         listener.openWebSocket(ip,port);
 
+        TestEffect eff = new TestEffect();
 
-        mVisualizer.setDataCaptureListener(listener, Visualizer.getMaxCaptureRate() / 2, false, true);
+        mVisualizer.setDataCaptureListener(eff, Visualizer.getMaxCaptureRate() / 4, false, true);
+        mVisualizer.setCaptureSize(128);
 
         mVisualizer.setEnabled(true);
 
