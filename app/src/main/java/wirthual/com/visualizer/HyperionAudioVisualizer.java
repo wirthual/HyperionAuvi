@@ -9,20 +9,33 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import wirthual.com.visualizer.effects.ThreeZonesEffect;
 
 
-public class HyperionAudioVisualizer extends ActionBarActivity {
+public class HyperionAudioVisualizer extends ActionBarActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     String TAG = "HyperionAudioVisualizer";
 
     Visualizer mVisualizer;
-    AudioDataListener listener;
+    ThreeZonesEffect listener;
 
+    SharedPreferences prefs;
+    SharedPreferences.Editor e;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_fx_demo);
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        e = prefs.edit();
+        e.putBoolean("websocket_connected",false);
+        e.putString("websocket_error","");
+
+        prefs.registerOnSharedPreferenceChangeListener(this);
+
     }
 
 
@@ -53,8 +66,6 @@ public class HyperionAudioVisualizer extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-
         String ip = prefs.getString("ip", "192.168.2.105");
         String port = prefs.getString("port", "19444");
 
@@ -80,11 +91,11 @@ public class HyperionAudioVisualizer extends ActionBarActivity {
         //processor = new AudioFttProcessor(topBottomLeds, leftRightLeds);
         //processor.openWebSocket(ip, port);
 
-         listener = new AudioDataListener(topBottomLeds,leftRightLeds);
-
-
-        mVisualizer.setDataCaptureListener(listener, Visualizer.getMaxCaptureRate() / intRate, false, true);
+        listener = new ThreeZonesEffect(this,topBottomLeds,leftRightLeds);
         listener.openWebSocket(ip,port);
+
+
+        mVisualizer.setDataCaptureListener(listener, Visualizer.getMaxCaptureRate() / 2, false, true);
 
         mVisualizer.setEnabled(true);
 
@@ -95,5 +106,25 @@ public class HyperionAudioVisualizer extends ActionBarActivity {
         super.onPause();
         listener.closeWebSocket();
         mVisualizer.setEnabled(false);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key=="websocket_connected") {
+            boolean connected = prefs.getBoolean(key, false);
+            if(connected) {
+                Toast.makeText(this, "Connected to Server", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(this, "Disconnect from Server", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if(key=="websocket_error"){
+            String error = prefs.getString(key, "");
+            if(error!="") {
+                Toast.makeText(this, "Error on connecting " + error, Toast.LENGTH_LONG).show();
+                e.putString("websocket_error", "");
+                e.commit();
+            }
+        }
     }
 }

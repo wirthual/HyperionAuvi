@@ -1,27 +1,54 @@
 package wirthual.com.visualizer.effects;
 
+import android.content.Context;
+import android.util.Log;
+
+import org.java_websocket.WebSocket;
+
+import java.net.URI;
+
+import wirthual.com.visualizer.HyperionWebSocket;
+
 /**
  * Created by devbuntu on 21.01.15.
  */
-abstract class Effect {
+public abstract class Effect {
 
+    String TAG = "Effect";
 
-    boolean waveform = false;
-    int topBottomLeds = 0;
-    int leftRightLeds = 0;
-    int totalLeds = 0;
+    HyperionWebSocket webSocketClient;
 
-    public Effect(int topBottom, int leftRight){
-        this.waveform = waveform;
-        this.topBottomLeds = topBottom;
-        this.leftRightLeds = leftRight;
-        totalLeds = 2*topBottom + 2*leftRight;
+    Context context;
+
+    public Effect(){};
+
+    public Effect(Context con){
+        context = con;
     }
-
-    abstract String processData(byte[] bytes);
 
     public abstract String getName();
 
     public abstract boolean isWaveformEffect();
+
+    public void openWebSocket(String ip, String port) {
+        Log.i("Websocket trys to connect to IP: " + ip + " Port: " + port, TAG);
+
+        String ws = "ws://" + ip + ":" + port;
+        URI uri = URI.create(ws);
+        webSocketClient = new HyperionWebSocket(context,uri);
+        webSocketClient.connect();
+    }
+
+    public void closeWebSocket() {
+        if (webSocketClient != null && webSocketClient.getReadyState() == WebSocket.READYSTATE.OPEN) {
+            webSocketClient.close();
+        }
+    }
+
+    public void sendData(String s){
+        if (webSocketClient != null && webSocketClient.getReadyState() == WebSocket.READYSTATE.OPEN) {
+            webSocketClient.send(s);
+        }
+    }
 
 }
