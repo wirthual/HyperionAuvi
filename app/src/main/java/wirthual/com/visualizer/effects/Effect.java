@@ -30,13 +30,19 @@ public abstract class Effect {
 
     public abstract boolean isWaveformEffect();
 
-    public void openWebSocket(String ip, String port) {
+    public WebSocket.READYSTATE openWebSocket(String ip, String port) {
         Log.i("Websocket trys to connect to IP: " + ip + " Port: " + port, TAG);
 
         String ws = "ws://" + ip + ":" + port;
         URI uri = URI.create(ws);
         webSocketClient = new HyperionWebSocket(context,uri);
-        webSocketClient.connect();
+        try {
+            webSocketClient.connectBlocking();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return webSocketClient.getReadyState();
     }
 
     public void closeWebSocket() {

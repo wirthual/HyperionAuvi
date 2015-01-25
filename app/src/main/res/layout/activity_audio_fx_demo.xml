@@ -5,7 +5,15 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".AudioFxDemo">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Hyperion Audio Visualizer"/>
+
+    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+        android:layout_below="@id/button"
+></TextView>
 </RelativeLayout>

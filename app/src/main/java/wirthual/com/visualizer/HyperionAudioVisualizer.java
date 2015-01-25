@@ -10,13 +10,15 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import wirthual.com.visualizer.effects.ThreeZonesEffect;
 import wirthual.com.visualizer.service.AudioAnalyzeService;
 
 
-public class HyperionAudioVisualizer extends ActionBarActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class HyperionAudioVisualizer extends ActionBarActivity implements SharedPreferences.OnSharedPreferenceChangeListener,View.OnClickListener {
 
     String TAG = "HyperionAudioVisualizer";
 
@@ -37,6 +39,10 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements Shared
         e.putString("websocket_error","");
 
         prefs.registerOnSharedPreferenceChangeListener(this);
+
+        Button b = (Button)findViewById(R.id.button);
+        b.setOnClickListener(this);
+
 
     }
 
@@ -102,10 +108,7 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements Shared
         mVisualizer.setCaptureSize(128);
 
         mVisualizer.setEnabled(true);*/
-        if(!isMyServiceRunning(AudioAnalyzeService.class)) {
-            Intent intent = new Intent(this, AudioAnalyzeService.class);
-            this.getApplicationContext().startService(intent);
-        }
+
 
     }
 
@@ -144,5 +147,20 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements Shared
             }
         }
         return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button:
+                if(!isMyServiceRunning(AudioAnalyzeService.class)) {
+                    Intent intent = new Intent(this, AudioAnalyzeService.class);
+                    this.getApplicationContext().startService(intent);
+                }else{
+                    Toast.makeText(this,"Service already running", Toast.LENGTH_LONG).show();
+                }
+
+        }
+
     }
 }

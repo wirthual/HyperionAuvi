@@ -1,8 +1,10 @@
 package wirthual.com.visualizer;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import org.java_websocket.client.WebSocketClient;
@@ -18,6 +20,8 @@ public class HyperionWebSocket extends WebSocketClient {
     String TAG = "wirthual.com.visualizer.HyperionWebSocket";
 
     Context context = null;
+
+    boolean isOpen = false;
 
     SharedPreferences prefs;
     SharedPreferences.Editor e;
@@ -37,6 +41,7 @@ public class HyperionWebSocket extends WebSocketClient {
         e.putBoolean("websocket_connected",true);
         e.commit();
         Log.i("WEBSOCKET OPENED", TAG);
+        makeNotification();
     }
 
     @Override
@@ -58,5 +63,15 @@ public class HyperionWebSocket extends WebSocketClient {
         e.putString("websocket_error",ex.getLocalizedMessage());
         e.commit();
 
+    }
+
+    private void makeNotification() {
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
+        mBuilder.setContentTitle(context.getText(R.string.notificationTitle))
+                .setSmallIcon(R.drawable.ic_launcher).setContentText(context.getText(R.string.notificationText))
+                .setAutoCancel(false).setOngoing(true);
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+        notificationManager.notify("Running",0,mBuilder.build());
     }
 }

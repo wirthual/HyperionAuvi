@@ -7,6 +7,9 @@ import android.media.audiofx.Visualizer;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
+
+import org.java_websocket.WebSocket;
 
 import wirthual.com.visualizer.effects.ThreeZonesEffect;
 
@@ -65,7 +68,13 @@ public class AudioAnalyzeService extends Service {
         //processor.openWebSocket(ip, port);
 
         listener = new ThreeZonesEffect(this,topBottomLeds,leftRightLeds);
-        listener.openWebSocket(ip,port);
+        WebSocket.READYSTATE state = listener.openWebSocket(ip, port);
+        if(state == WebSocket.READYSTATE.OPEN) {
+            Toast.makeText(this,"Verbindung erfolgreich hergestellt.",Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(this,"Keine Verbingung möglich.",Toast.LENGTH_SHORT).show();
+            stopSelf();
+        }
 
         //TestEffect eff = new TestEffect();
 
