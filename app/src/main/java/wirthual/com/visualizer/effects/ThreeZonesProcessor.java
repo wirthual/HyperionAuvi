@@ -128,7 +128,9 @@ public class ThreeZonesProcessor {
                 colorJson.put(0);
             }
         }
+        if(debug){
         Log.i(String.valueOf(colorJson.length()), TAG);
+        }
 
         JSONObject commandJson = new JSONObject();
         try {

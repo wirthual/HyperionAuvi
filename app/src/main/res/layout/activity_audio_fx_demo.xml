@@ -10,9 +10,9 @@
         android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Start Hyperion Audio Visualizer"/>
+        android:text="@string/start"/>
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
+    <TextView android:text="@string/description" android:layout_width="wrap_content"
     android:layout_height="wrap_content"
         android:layout_below="@id/button"
 ></TextView>

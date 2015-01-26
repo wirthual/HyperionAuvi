@@ -1,6 +1,8 @@
 package wirthual.com.visualizer;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
 /**
@@ -29,6 +31,16 @@ public class SettingsActivity extends PreferenceActivity {
         super.onPostCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.pref_data_sync);
+
+        Preference dialogPreference = (Preference) getPreferenceScreen().findPreference("dialog_preference");
+        dialogPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(getApplicationContext(), LicenceAcitvity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
+
     }
 
 

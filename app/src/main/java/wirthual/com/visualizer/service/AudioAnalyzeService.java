@@ -7,10 +7,8 @@ import android.media.audiofx.Visualizer;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
-import org.java_websocket.WebSocket;
-
+import wirthual.com.visualizer.effects.LevelEffect;
 import wirthual.com.visualizer.effects.ThreeZonesEffect;
 
 /**
@@ -25,8 +23,10 @@ public class AudioAnalyzeService extends Service {
 
     Visualizer mVisualizer;
     ThreeZonesEffect listener;
+    LevelEffect test;
 
     SharedPreferences prefs;
+    SharedPreferences.Editor e;
 
 
     @Override
@@ -40,6 +40,7 @@ public class AudioAnalyzeService extends Service {
         Log.i("Service started",TAG);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        e = prefs.edit();
 
 
         String ip = prefs.getString("ip", "192.168.2.105");
@@ -67,18 +68,22 @@ public class AudioAnalyzeService extends Service {
         //processor = new AudioFttProcessor(topBottomLeds, leftRightLeds);
         //processor.openWebSocket(ip, port);
 
-        listener = new ThreeZonesEffect(this,topBottomLeds,leftRightLeds);
-        WebSocket.READYSTATE state = listener.openWebSocket(ip, port);
+        //listener = new ThreeZonesEffect(this,topBottomLeds,leftRightLeds);
+        test = new LevelEffect(this,topBottomLeds,leftRightLeds);
+        test.openWebSocket(ip,port);
+
+        /*WebSocket.READYSTATE state = test.openWebSocket(ip, port);
         if(state == WebSocket.READYSTATE.OPEN) {
-            Toast.makeText(this,"Verbindung erfolgreich hergestellt.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,getText(R.string.connected),Toast.LENGTH_SHORT).show();
+            e.putBoolean("running",true);
+            e.commit();
         }else {
-            Toast.makeText(this,"Keine Verbingung möglich.",Toast.LENGTH_SHORT).show();
             stopSelf();
-        }
+        }*/
 
         //TestEffect eff = new TestEffect();
 
-        mVisualizer.setDataCaptureListener(listener, Visualizer.getMaxCaptureRate() / 4, false, true);
+        mVisualizer.setDataCaptureListener(test, Visualizer.getMaxCaptureRate() / 4, false, true);
         mVisualizer.setCaptureSize(128);
 
         mVisualizer.setEnabled(true);
@@ -92,6 +97,9 @@ public class AudioAnalyzeService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Log.i("Service stopped",TAG);
+        e.putBoolean("running",false);
+        e.commit();
         mVisualizer.setEnabled(false);
+        test.closeWebSocket();
     }
 }

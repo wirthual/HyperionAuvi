@@ -12,7 +12,7 @@
             android:key="port"
             android:summary="Port of the hyperion server"
             android:title="Port"
-            android:defaultValue="9090"/>
+            android:defaultValue="19444"/>
         <EditTextPreference
             android:key="topBottom"
             android:summary="Number of Leds on Top and on Bottom"
@@ -35,5 +35,7 @@
             android:defaultValue="2"
             android:inputType="numberDecimal"
             />
+        <Preference android:key="dialog_preference"
+            android:title="About"/>
     </PreferenceCategory>
 </PreferenceScreen>

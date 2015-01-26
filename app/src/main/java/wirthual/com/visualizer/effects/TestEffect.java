@@ -64,10 +64,6 @@ public class TestEffect extends Effect implements Visualizer.OnDataCaptureListen
             System.out.println(String.valueOf(entry.getKey()) + " => " + String.valueOf(entry.getValue()));
         }
 
-
-
-
-
     }
 
     private void print(String s) {

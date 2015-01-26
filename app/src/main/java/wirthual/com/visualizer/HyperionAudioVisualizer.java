@@ -12,13 +12,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import wirthual.com.visualizer.effects.ThreeZonesEffect;
 import wirthual.com.visualizer.service.AudioAnalyzeService;
 
 
-public class HyperionAudioVisualizer extends ActionBarActivity implements SharedPreferences.OnSharedPreferenceChangeListener,View.OnClickListener {
+public class HyperionAudioVisualizer extends ActionBarActivity implements View.OnClickListener,SharedPreferences.OnSharedPreferenceChangeListener {
 
     String TAG = "HyperionAudioVisualizer";
 
@@ -28,22 +27,22 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements Shared
     SharedPreferences prefs;
     SharedPreferences.Editor e;
 
+    Button b;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_fx_demo);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        e = prefs.edit();
-        e.putBoolean("websocket_connected",false);
-        e.putString("websocket_error","");
-
+        //e = prefs.edit();
+        //e.putBoolean("running",false);
+        //e.commit();
         prefs.registerOnSharedPreferenceChangeListener(this);
 
-        Button b = (Button)findViewById(R.id.button);
+
+        b = (Button)findViewById(R.id.button);
         b.setOnClickListener(this);
-
-
     }
 
 
@@ -74,41 +73,13 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements Shared
     protected void onResume() {
         super.onResume();
 
-        /*String ip = prefs.getString("ip", "192.168.2.105");
-        String port = prefs.getString("port", "19444");
-
-        String rate = prefs.getString("rate", "2");
-        int intRate = Integer.valueOf(rate);
-        if (intRate < 2) {
-            intRate = 2;
+        //Check if analyzing is running, if yes, set button text to stop ...
+        boolean running = prefs.getBoolean("running",false);
+        if(running){
+            b.setText(getText(R.string.stop));
+        }else{
+            b.setText(getText(R.string.start));
         }
-
-        int topBottomLeds = Integer.valueOf(prefs.getString("topBottom", "40"));
-        Log.i("Number Leds Top/Bottom: " + String.valueOf(topBottomLeds), TAG);
-        int leftRightLeds = Integer.valueOf(prefs.getString("leftRight", "24"));
-        Log.i("Number Leds Left/Right: " + String.valueOf(leftRightLeds), TAG);
-
-
-        mVisualizer = new Visualizer(0);
-        int minRange = Visualizer.getCaptureSizeRange()[0];
-        Log.i(TAG, String.valueOf(minRange));
-        int maxRange = Visualizer.getCaptureSizeRange()[1];
-        Log.i(TAG, String.valueOf(maxRange));
-        mVisualizer.setCaptureSize(minRange);
-
-        //processor = new AudioFttProcessor(topBottomLeds, leftRightLeds);
-        //processor.openWebSocket(ip, port);
-
-        listener = new ThreeZonesEffect(this,topBottomLeds,leftRightLeds);
-        listener.openWebSocket(ip,port);
-
-        TestEffect eff = new TestEffect();
-
-        mVisualizer.setDataCaptureListener(eff, Visualizer.getMaxCaptureRate() / 4, false, true);
-        mVisualizer.setCaptureSize(128);
-
-        mVisualizer.setEnabled(true);*/
-
 
     }
 
@@ -121,20 +92,12 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements Shared
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key=="websocket_connected") {
-            boolean connected = prefs.getBoolean(key, false);
-            if(connected) {
-                Toast.makeText(this, "Connected to Server", Toast.LENGTH_SHORT).show();
+        if(key=="running") {
+            boolean running = prefs.getBoolean(key, false);
+            if(running){
+                b.setText(getText(R.string.stop));
             }else{
-                Toast.makeText(this, "Disconnect from Server", Toast.LENGTH_SHORT).show();
-            }
-        }
-        if(key=="websocket_error"){
-            String error = prefs.getString(key, "");
-            if(error!="") {
-                Toast.makeText(this, "Error on connecting " + error, Toast.LENGTH_LONG).show();
-                e.putString("websocket_error", "");
-                e.commit();
+                b.setText(getText(R.string.start));
             }
         }
     }
@@ -151,13 +114,13 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements Shared
 
     @Override
     public void onClick(View v) {
+        Intent intent = new Intent(this, AudioAnalyzeService.class);
         switch (v.getId()) {
             case R.id.button:
                 if(!isMyServiceRunning(AudioAnalyzeService.class)) {
-                    Intent intent = new Intent(this, AudioAnalyzeService.class);
                     this.getApplicationContext().startService(intent);
                 }else{
-                    Toast.makeText(this,"Service already running", Toast.LENGTH_LONG).show();
+                    stopService(intent);
                 }
 
         }
