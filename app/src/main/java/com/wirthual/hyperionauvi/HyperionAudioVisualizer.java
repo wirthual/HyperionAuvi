@@ -103,8 +103,6 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
     @Override
     protected void onPause() {
         super.onPause();
-       /* listener.closeWebSocket();
-        mVisualizer.setEnabled(false);*/
     }
 
     @Override
