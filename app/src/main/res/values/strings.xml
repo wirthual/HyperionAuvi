@@ -17,10 +17,22 @@
     <string name="start">Start Hyperion Audio Visualization</string>
     <string name="stop">Stop Hyperion Audio Visualization</string>
     <string name="title_activity_licence_acitvity">Licences</string>
+    <string name="play_music">Play Music</string>
 
     <string-array name="effects_array">
         <item>3 Zones</item>
         <item>Level Rainbow</item>
+    </string-array>
+
+    <string-array name="shortcut_values">
+        <item>com.google.android.music</item>
+        <item>com.s2apps.player</item>
+    </string-array>
+
+
+    <string-array name="shortcut_entries">
+        <item>Goolge Play Music</item>
+        <item>aePlayer</item>
     </string-array>
 
 

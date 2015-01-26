@@ -3,4 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".AudioFxDemo">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/play_music" android:title="@string/play_music"
+        android:orderInCategory="1" app:showAsAction="ifRoom" android:icon="@android:drawable/ic_media_play"/>
 </menu>

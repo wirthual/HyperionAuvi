@@ -29,13 +29,25 @@
             />
         <EditTextPreference
             android:key="rate"
-            android:summary="Value to decrease data sending. The higher the vslue, the lower data-rate."
+            android:summary="Value to decrease data sending. The higher the value, the lower the data-rate.\n 2 Is the fastest.
+            100 is veeeery slow."
             android:title="Data Rate"
             android:numeric="integer"
             android:defaultValue="2"
             android:inputType="numberDecimal"
             />
+
+        <ListPreference
+            android:key="player_preference"
+            android:title="Select Player Shortcut"
+            android:entries="@array/shortcut_entries"
+            android:entryValues="@array/shortcut_values"
+            android:defaultValue="0"/>
+
         <Preference android:key="dialog_preference"
             android:title="About"/>
+
+
+
     </PreferenceCategory>
 </PreferenceScreen>

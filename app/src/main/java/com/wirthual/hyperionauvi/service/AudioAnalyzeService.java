@@ -91,7 +91,7 @@ public class AudioAnalyzeService extends Service {
             stopSelf();
         }
 
-        mVisualizer.setDataCaptureListener(currentEffect, Visualizer.getMaxCaptureRate() / 4, false, true);
+        mVisualizer.setDataCaptureListener(currentEffect, Visualizer.getMaxCaptureRate() / intRate, false, true);
         mVisualizer.setCaptureSize(128);
 
         mVisualizer.setEnabled(true);

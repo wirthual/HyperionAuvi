@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.audiofx.Visualizer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
@@ -80,6 +81,11 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         }
+        String playerIdx = prefs.getString("player_preference","com.google.android.music");
+
+        if(id == R.id.play_music){
+            startNewActivity(this,playerIdx);
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -146,5 +152,20 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
 
     public void setSelectedEffect(int effect){
         selectedEffect = effect;
+    }
+
+    public void startNewActivity(Context context, String packageName) {
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+        if (intent != null) {
+        /* We found the activity now start the activity */
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } else {
+        /* Bring user to the market or let them choose an app? */
+            intent = new Intent(Intent.ACTION_VIEW);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setData(Uri.parse("market://details?id=" + packageName));
+            context.startActivity(intent);
+        }
     }
 }
