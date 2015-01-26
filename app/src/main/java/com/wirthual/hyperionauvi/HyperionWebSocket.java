@@ -1,4 +1,4 @@
-package wirthual.com.visualizer;
+package com.wirthual.hyperionauvi;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,22 +11,26 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.wirthual.hyperionauvi.service.AudioAnalyzeService;
+
 import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
-
-import wirthual.com.visualizer.service.AudioAnalyzeService;
 
 /**
  * Created by devbuntu on 19.01.15.
  */
 public class HyperionWebSocket extends WebSocketClient {
 
-    String TAG = "wirthual.com.visualizer.HyperionWebSocket";
+    String TAG = "com.wirthual.visualizer.HyperionWebSocket";
 
     final static int ID_ABORTNOTIFICATION = 808;
     final static int ID_RUNNINGNOTIFICATION = 809;
+
+    final static int WS_TIMEOUT = 1; //s
+
 
     Context context = null;
 
@@ -37,7 +41,7 @@ public class HyperionWebSocket extends WebSocketClient {
     NotificationManager notificationManager;
 
     public HyperionWebSocket(Context con,URI uri) {
-        super(uri);
+        super(uri,new Draft_17(),null,WS_TIMEOUT);
         context = con;
 
         notificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);

@@ -1,4 +1,4 @@
-package wirthual.com.visualizer.effects;
+package com.wirthual.hyperionauvi.effects;
 
 import android.util.Log;
 

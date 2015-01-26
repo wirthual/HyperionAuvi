@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="wirthual.com.visualizer" >
+    package="com.wirthual.hyperionauvi" >
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
@@ -12,13 +12,13 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <service
-            android:name=".service.AudioAnalyzeService"
+            android:name="com.wirthual.hyperionauvi.service.AudioAnalyzeService"
             android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
             android:label="AudioAnalyzeService" >
         </service>
 
         <activity
-            android:name=".HyperionAudioVisualizer"
+            android:name="com.wirthual.hyperionauvi.HyperionAudioVisualizer"
             android:label="@string/app_name"
             android:launchMode="singleTop" >
             <intent-filter>
@@ -32,11 +32,11 @@
             android:label="@string/title_activity_preference" >
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.wirthual.hyperionauvi.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
         <activity
-            android:name=".LicenceAcitvity"
+            android:name="com.wirthual.hyperionauvi.LicenceAcitvity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:label="@string/title_activity_licence_acitvity" >
         </activity>

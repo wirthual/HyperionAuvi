@@ -1,4 +1,4 @@
-package wirthual.com.visualizer;
+package com.wirthual.hyperionauvi;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,7 +30,7 @@ public class SettingsActivity extends PreferenceActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        addPreferencesFromResource(R.xml.pref_data_sync);
+        addPreferencesFromResource(R.xml.pref_general);
 
         Preference dialogPreference = (Preference) getPreferenceScreen().findPreference("dialog_preference");
         dialogPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

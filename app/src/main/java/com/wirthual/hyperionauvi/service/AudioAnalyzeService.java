@@ -1,4 +1,4 @@
-package wirthual.com.visualizer.service;
+package com.wirthual.hyperionauvi.service;
 
 import android.app.Service;
 import android.content.Intent;
@@ -7,9 +7,14 @@ import android.media.audiofx.Visualizer;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
-import wirthual.com.visualizer.effects.LevelEffect;
-import wirthual.com.visualizer.effects.ThreeZonesEffect;
+import com.wirthual.hyperionauvi.R;
+import com.wirthual.hyperionauvi.effects.Effect;
+import com.wirthual.hyperionauvi.effects.LevelEffect;
+import com.wirthual.hyperionauvi.effects.ThreeZonesEffect;
+
+import org.java_websocket.WebSocket;
 
 /**
  * Created by devbuntu on 24.01.15.
@@ -18,12 +23,12 @@ public class AudioAnalyzeService extends Service {
 
     public static final String TAG ="AudioService";
     public static final int THREEZONESEFFECT =1;
-
+    public static final int LEVELEFFECT =2;
 
 
     Visualizer mVisualizer;
     ThreeZonesEffect listener;
-    LevelEffect test;
+    Effect currentEffect;
 
     SharedPreferences prefs;
     SharedPreferences.Editor e;
@@ -38,6 +43,8 @@ public class AudioAnalyzeService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("Service started",TAG);
+
+        int eff = intent.getIntExtra("effect",THREEZONESEFFECT);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         e = prefs.edit();
@@ -69,21 +76,22 @@ public class AudioAnalyzeService extends Service {
         //processor.openWebSocket(ip, port);
 
         //listener = new ThreeZonesEffect(this,topBottomLeds,leftRightLeds);
-        test = new LevelEffect(this,topBottomLeds,leftRightLeds);
-        test.openWebSocket(ip,port);
+        if(eff == LEVELEFFECT) {
+            currentEffect = new LevelEffect(this, topBottomLeds, leftRightLeds);
+        }else if(eff == THREEZONESEFFECT){
+            currentEffect = new ThreeZonesEffect(this,topBottomLeds,leftRightLeds);
+        }
 
-        /*WebSocket.READYSTATE state = test.openWebSocket(ip, port);
+        WebSocket.READYSTATE state = currentEffect.openWebSocket(ip, port);
         if(state == WebSocket.READYSTATE.OPEN) {
-            Toast.makeText(this,getText(R.string.connected),Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getText(R.string.connected), Toast.LENGTH_SHORT).show();
             e.putBoolean("running",true);
             e.commit();
         }else {
             stopSelf();
-        }*/
+        }
 
-        //TestEffect eff = new TestEffect();
-
-        mVisualizer.setDataCaptureListener(test, Visualizer.getMaxCaptureRate() / 4, false, true);
+        mVisualizer.setDataCaptureListener(currentEffect, Visualizer.getMaxCaptureRate() / 4, false, true);
         mVisualizer.setCaptureSize(128);
 
         mVisualizer.setEnabled(true);
@@ -100,6 +108,6 @@ public class AudioAnalyzeService extends Service {
         e.putBoolean("running",false);
         e.commit();
         mVisualizer.setEnabled(false);
-        test.closeWebSocket();
+        currentEffect.closeWebSocket();
     }
 }

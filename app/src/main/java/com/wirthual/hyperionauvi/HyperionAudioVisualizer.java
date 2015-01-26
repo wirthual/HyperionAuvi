@@ -1,4 +1,4 @@
-package wirthual.com.visualizer;
+package com.wirthual.hyperionauvi;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -11,10 +11,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 
-import wirthual.com.visualizer.effects.ThreeZonesEffect;
-import wirthual.com.visualizer.service.AudioAnalyzeService;
+import com.wirthual.hyperionauvi.effects.ThreeZonesEffect;
+import com.wirthual.hyperionauvi.service.AudioAnalyzeService;
 
 
 public class HyperionAudioVisualizer extends ActionBarActivity implements View.OnClickListener,SharedPreferences.OnSharedPreferenceChangeListener {
@@ -28,6 +30,9 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
     SharedPreferences.Editor e;
 
     Button b;
+    Spinner spinner;
+
+    int selectedEffect = AudioAnalyzeService.THREEZONESEFFECT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,16 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
 
         b = (Button)findViewById(R.id.button);
         b.setOnClickListener(this);
+
+        spinner = (Spinner)findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.effects_array, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new EffectSpinnerChangeListener(this));
+
     }
 
 
@@ -77,8 +92,10 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
         boolean running = prefs.getBoolean("running",false);
         if(running){
             b.setText(getText(R.string.stop));
+            spinner.setEnabled(false);
         }else{
             b.setText(getText(R.string.start));
+            b.setEnabled(true);
         }
 
     }
@@ -96,8 +113,10 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
             boolean running = prefs.getBoolean(key, false);
             if(running){
                 b.setText(getText(R.string.stop));
+                spinner.setEnabled(false);
             }else{
                 b.setText(getText(R.string.start));
+                spinner.setEnabled(true);
             }
         }
     }
@@ -115,6 +134,7 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(this, AudioAnalyzeService.class);
+        intent.putExtra("effect",selectedEffect);
         switch (v.getId()) {
             case R.id.button:
                 if(!isMyServiceRunning(AudioAnalyzeService.class)) {
@@ -124,6 +144,9 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
                 }
 
         }
+    }
 
+    public void setSelectedEffect(int effect){
+        selectedEffect = effect;
     }
 }

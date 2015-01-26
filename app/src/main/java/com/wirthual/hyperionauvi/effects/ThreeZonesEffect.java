@@ -1,4 +1,4 @@
-package wirthual.com.visualizer.effects;
+package com.wirthual.hyperionauvi.effects;
 
 import android.content.Context;
 import android.media.audiofx.Visualizer;
@@ -6,7 +6,7 @@ import android.media.audiofx.Visualizer;
 /**
  * Created by devbuntu on 20.01.15.
  */
-public class ThreeZonesEffect extends wirthual.com.visualizer.effects.Effect implements Visualizer.OnDataCaptureListener {
+public class ThreeZonesEffect extends com.wirthual.hyperionauvi.effects.Effect implements Visualizer.OnDataCaptureListener {
 
     String TAG = "AudioDataListener";
 

@@ -1,4 +1,4 @@
-package wirthual.com.visualizer;
+package com.wirthual.hyperionauvi;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -18,7 +18,7 @@ public class LicenceAcitvity extends ActionBarActivity {
 
 
         TextView htmlTextView = (TextView)findViewById(R.id.license_apache);
-        htmlTextView.setText(Html.fromHtml(getText(R.string.nice_html).toString()));
+        htmlTextView.setText(Html.fromHtml(getText(R.string.license).toString()));
     }
 
 
@@ -42,5 +42,11 @@ public class LicenceAcitvity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (!hasFocus) finish();
     }
 }

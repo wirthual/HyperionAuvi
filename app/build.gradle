@@ -10,7 +10,7 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "wirthual.com.visualizer"
+        applicationId "com.wirthual.visualizer"
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 1

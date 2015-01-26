@@ -1,4 +1,4 @@
-package wirthual.com.visualizer;
+package com.wirthual.hyperionauvi;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

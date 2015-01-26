@@ -1,4 +1,4 @@
-package wirthual.com.visualizer.effects;
+package com.wirthual.hyperionauvi.effects;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -101,7 +101,7 @@ public class LevelEffect extends Effect implements Visualizer.OnDataCaptureListe
             colorJson.put(0);
             colorJson.put(0);
         }
-        for (int i = 0; i < topBottomLeds; i++) {
+     /*   for (int i = 0; i < topBottomLeds; i++) {
             try {
             colorJson.put(i*3,255);
             colorJson.put(i*3+1,0);
@@ -109,7 +109,7 @@ public class LevelEffect extends Effect implements Visualizer.OnDataCaptureListe
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
+        } */
         for (int i = 0;i<norm_val; i++){
             int red = colors.get(i*3);
             int green = colors.get(i * 3 + 1);
@@ -131,17 +131,20 @@ public class LevelEffect extends Effect implements Visualizer.OnDataCaptureListe
             int green = colors.get(i*3+1);
             int blue = colors.get(i*3+2);
             try {
-                int index1 = ((topBottomLeds*2+leftRightLeds)*3)+3*i;
-                int index2 = ((topBottomLeds*2+leftRightLeds)*3)+3*i+1;
-                int index3 = ((topBottomLeds*2+leftRightLeds)*3)+3*i+2;
+                int index1 = ((totalLeds)*3-1)-(3*i+2);
+                int index2 = ((totalLeds)*3-1)-(3*i+1);
+                int index3 = ((totalLeds)*3-1)-3*i;
+
+
 
                 colorJson.put(index1,red);
-                colorJson.put(index2, green);
+                colorJson.put(index2,green);
                 colorJson.put(index3,blue);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+
 
         Log.i(String.valueOf(colorJson.length()), TAG);
 

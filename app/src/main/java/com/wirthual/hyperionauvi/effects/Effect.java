@@ -1,18 +1,19 @@
-package wirthual.com.visualizer.effects;
+package com.wirthual.hyperionauvi.effects;
 
 import android.content.Context;
+import android.media.audiofx.Visualizer;
 import android.util.Log;
+
+import com.wirthual.hyperionauvi.HyperionWebSocket;
 
 import org.java_websocket.WebSocket;
 
 import java.net.URI;
 
-import wirthual.com.visualizer.HyperionWebSocket;
-
 /**
  * Created by devbuntu on 21.01.15.
  */
-public abstract class Effect {
+public abstract class Effect implements Visualizer.OnDataCaptureListener {
 
     String TAG = "Effect";
 
@@ -36,6 +37,7 @@ public abstract class Effect {
         String ws = "ws://" + ip + ":" + port;
         URI uri = URI.create(ws);
         webSocketClient = new HyperionWebSocket(context,uri);
+
         try {
             webSocketClient.connectBlocking();
         } catch (InterruptedException e) {

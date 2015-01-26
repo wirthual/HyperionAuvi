@@ -4,7 +4,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="wirthual.com.visualizer.LicenceAcitvity">
+    tools:context="com.wirthual.hyperionauvi.LicenceAcitvity">
 
     <ScrollView
         android:id="@+id/SCROLLER_ID"
