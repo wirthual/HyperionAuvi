@@ -38,7 +38,11 @@ public abstract class Effect implements Visualizer.OnDataCaptureListener {
         URI uri = URI.create(ws);
         webSocketClient = new HyperionWebSocket(context,uri);
 
-            webSocketClient.connect();
+        try {
+            webSocketClient.connectBlocking();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
 
         return webSocketClient.getReadyState();

@@ -28,7 +28,6 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
     ThreeZonesEffect listener;
 
     SharedPreferences prefs;
-    SharedPreferences.Editor e;
 
     Button b;
     Spinner spinner;
@@ -41,11 +40,7 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
         setContentView(R.layout.activity_audio_fx_demo);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        //e = prefs.edit();
-        //e.putBoolean("running",false);
-        //e.commit();
         prefs.registerOnSharedPreferenceChangeListener(this);
-
 
         b = (Button)findViewById(R.id.button);
         b.setOnClickListener(this);
@@ -53,11 +48,13 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
         spinner = (Spinner)findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.effects_array, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
+        // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
+        // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new EffectSpinnerChangeListener(this));
+
+        HyperionConfig config = loadPreferences();
 
     }
 
@@ -167,5 +164,24 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
             intent.setData(Uri.parse("market://details?id=" + packageName));
             context.startActivity(intent);
         }
+    }
+
+    private HyperionConfig loadPreferences(){
+
+        String ip   =  prefs.getString("ip", "0.0.0.0");
+        String port  = prefs.getString("port", "19444");
+        String rate = prefs.getString("rate", "2");
+
+        int intRate = Integer.valueOf(rate);
+        if (intRate < 2 ) {
+            intRate = 2;
+        }
+        if (intRate > 100 ) {
+            intRate = 100;
+        }
+        int topBottomLeds = Integer.valueOf(prefs.getString("topBottom", "40"));
+        int leftRightLeds = Integer.valueOf(prefs.getString("leftRight", "24"));
+
+        return new HyperionConfig(ip,port,leftRightLeds,topBottomLeds);
     }
 }

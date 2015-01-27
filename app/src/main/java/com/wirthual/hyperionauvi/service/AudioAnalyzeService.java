@@ -19,7 +19,7 @@ import org.java_websocket.WebSocket;
 /**
  * Created by devbuntu on 24.01.15.
  */
-public class AudioAnalyzeService extends Service {
+public class AudioAnalyzeService extends Service{
 
     public static final String TAG ="AudioService";
     public static final int THREEZONESEFFECT =1;
