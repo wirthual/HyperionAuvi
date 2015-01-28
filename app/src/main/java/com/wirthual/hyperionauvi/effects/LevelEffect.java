@@ -1,9 +1,10 @@
 package com.wirthual.hyperionauvi.effects;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.media.audiofx.Visualizer;
 import android.util.Log;
+
+import com.wirthual.hyperionauvi.HyperionSocket;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,8 +27,8 @@ public class LevelEffect extends Effect implements Visualizer.OnDataCaptureListe
 
     List<Integer> colors = new ArrayList<Integer>();
 
-    public LevelEffect(Context con,int topBottom,int leftRight){
-        super(con);
+    public LevelEffect(HyperionSocket socket,int topBottom,int leftRight){
+        super(socket);
         topBottomLeds = topBottom;
         leftRightLeds = leftRight;
         totalLeds = topBottomLeds *2 + leftRightLeds * 2;

@@ -3,6 +3,7 @@ package com.wirthual.hyperionauvi;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.audiofx.Visualizer;
 import android.net.Uri;
@@ -17,7 +18,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.wirthual.hyperionauvi.effects.ThreeZonesEffect;
-import com.wirthual.hyperionauvi.service.AudioAnalyzeService;
+import com.wirthual.hyperionauvi.service.AnalyzeService;
 
 
 public class HyperionAudioVisualizer extends ActionBarActivity implements View.OnClickListener,SharedPreferences.OnSharedPreferenceChangeListener {
@@ -29,18 +30,29 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
 
     SharedPreferences prefs;
 
+    HyperionConfig config;
+
     Button b;
     Spinner spinner;
 
-    int selectedEffect = AudioAnalyzeService.THREEZONESEFFECT;
+    HyperionAudioVisualizerBroadcastReceiver receiver;
+
+    int selectedEffect = AnalyzeService.THREEZONESEFFECT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_fx_demo);
 
+
+
+        receiver = new HyperionAudioVisualizerBroadcastReceiver();
+
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        prefs.registerOnSharedPreferenceChangeListener(this);
+
+        config = loadPreferences();
+
+        prefs.registerOnSharedPreferenceChangeListener(config);
 
         b = (Button)findViewById(R.id.button);
         b.setOnClickListener(this);
@@ -53,8 +65,6 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new EffectSpinnerChangeListener(this));
-
-        HyperionConfig config = loadPreferences();
 
     }
 
@@ -91,14 +101,12 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
     protected void onResume() {
         super.onResume();
 
-        //Check if analyzing is running, if yes, set button text to stop ...
-        boolean running = prefs.getBoolean("running",false);
-        if(running){
+        if(!isMyServiceRunning(AnalyzeService.class)) {
+            b.setText(getText(R.string.start));
+            spinner.setEnabled(true);
+        }else{
             b.setText(getText(R.string.stop));
             spinner.setEnabled(false);
-        }else{
-            b.setText(getText(R.string.start));
-            b.setEnabled(true);
         }
 
     }
@@ -134,17 +142,19 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(this, AudioAnalyzeService.class);
+        Intent intent = new Intent(this, AnalyzeService.class);
         intent.putExtra("effect",selectedEffect);
+        intent.putExtra("config", config);
         switch (v.getId()) {
             case R.id.button:
-                if(!isMyServiceRunning(AudioAnalyzeService.class)) {
+                if(!isMyServiceRunning(AnalyzeService.class)) {
                     this.getApplicationContext().startService(intent);
                 }else{
                     stopService(intent);
                 }
 
         }
+
     }
 
     public void setSelectedEffect(int effect){
@@ -166,6 +176,23 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
         }
     }
 
+    public void updateUI(String message){
+        switch (message){
+            case HyperionSocket.WS_OPEN:
+                b.setText(getText(R.string.stop));
+                spinner.setEnabled(false);
+                break;
+            case HyperionSocket.WS_CLOSED:
+                b.setText(getText(R.string.start));
+                spinner.setEnabled(true);
+                break;
+            case HyperionSocket.WS_ERROR:
+                break;
+            case HyperionSocket.WS_MESSAGE:
+                break;
+        }
+    }
+
     private HyperionConfig loadPreferences(){
 
         String ip   =  prefs.getString("ip", "0.0.0.0");
@@ -182,6 +209,24 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
         int topBottomLeds = Integer.valueOf(prefs.getString("topBottom", "40"));
         int leftRightLeds = Integer.valueOf(prefs.getString("leftRight", "24"));
 
-        return new HyperionConfig(ip,port,leftRightLeds,topBottomLeds);
+        return new HyperionConfig(ip,port,leftRightLeds,topBottomLeds,intRate);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(HyperionSocket.WS_OPEN);
+        intentFilter.addAction(HyperionSocket.WS_CLOSED);
+        intentFilter.addAction(HyperionSocket.WS_ERROR);
+        intentFilter.addAction(HyperionSocket.WS_MESSAGE);
+
+        this.registerReceiver(receiver,intentFilter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        this.unregisterReceiver(receiver);
     }
 }

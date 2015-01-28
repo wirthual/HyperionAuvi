@@ -1,7 +1,8 @@
 package com.wirthual.hyperionauvi.effects;
 
-import android.content.Context;
 import android.media.audiofx.Visualizer;
+
+import com.wirthual.hyperionauvi.HyperionSocket;
 
 /**
  * Created by devbuntu on 20.01.15.
@@ -13,8 +14,8 @@ public class ThreeZonesEffect extends com.wirthual.hyperionauvi.effects.Effect i
     ThreeZonesProcessor currentEffect;
 
 
-    public ThreeZonesEffect(Context con,int topbottom, int leftRight) {
-        super(con);
+    public ThreeZonesEffect(HyperionSocket socket,int topbottom, int leftRight) {
+        super(socket);
         currentEffect = new ThreeZonesProcessor(topbottom,leftRight);
     }
 

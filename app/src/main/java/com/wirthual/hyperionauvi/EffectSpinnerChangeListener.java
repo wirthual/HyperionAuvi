@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
-import com.wirthual.hyperionauvi.service.AudioAnalyzeService;
+import com.wirthual.hyperionauvi.service.AnalyzeService;
 
 /**
  * Created by devbuntu on 26.01.15.
@@ -23,9 +23,9 @@ public class EffectSpinnerChangeListener implements Spinner.OnItemSelectedListen
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String selected = parent.getItemAtPosition(position).toString();
         if(selected.equalsIgnoreCase("3 Zones")) {
-            ((HyperionAudioVisualizer) context).setSelectedEffect(AudioAnalyzeService.THREEZONESEFFECT);
+            ((HyperionAudioVisualizer) context).setSelectedEffect(AnalyzeService.THREEZONESEFFECT);
         }else if(selected.equalsIgnoreCase("Level Rainbow")){
-            ((HyperionAudioVisualizer) context).setSelectedEffect(AudioAnalyzeService.LEVELEFFECT);
+            ((HyperionAudioVisualizer) context).setSelectedEffect(AnalyzeService.LEVELEFFECT);
         }
     }
 
