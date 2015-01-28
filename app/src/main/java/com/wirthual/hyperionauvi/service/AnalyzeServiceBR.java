@@ -9,7 +9,7 @@ import com.wirthual.hyperionauvi.HyperionSocket;
 /**
  * Created by devbuntu on 28.01.15.
  */
-public class AnalyzeServiceBroadcastReceiver extends BroadcastReceiver {
+public class AnalyzeServiceBR extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {

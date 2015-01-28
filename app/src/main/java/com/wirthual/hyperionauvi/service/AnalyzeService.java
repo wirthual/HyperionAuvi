@@ -46,7 +46,7 @@ public class AnalyzeService extends Service{
     public int onStartCommand(Intent intent, int flags, int startId) {
         eff = intent.getIntExtra("effect",THREEZONESEFFECT);
 
-         receiver = new AnalyzeServiceBroadcastReceiver();
+         receiver = new AnalyzeServiceBR();
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(HyperionSocket.WS_OPEN);

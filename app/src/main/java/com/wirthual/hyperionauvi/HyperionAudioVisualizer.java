@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.media.audiofx.Visualizer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -17,16 +16,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
-import com.wirthual.hyperionauvi.effects.ThreeZonesEffect;
 import com.wirthual.hyperionauvi.service.AnalyzeService;
 
 
-public class HyperionAudioVisualizer extends ActionBarActivity implements View.OnClickListener,SharedPreferences.OnSharedPreferenceChangeListener {
-
+public class HyperionAudioVisualizer extends ActionBarActivity implements View.OnClickListener{
     String TAG = "HyperionAudioVisualizer";
-
-    Visualizer mVisualizer;
-    ThreeZonesEffect listener;
 
     SharedPreferences prefs;
 
@@ -35,7 +29,7 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
     Button b;
     Spinner spinner;
 
-    HyperionAudioVisualizerBroadcastReceiver receiver;
+    HyperionAudioVisualizerBR receiver;
 
     int selectedEffect = AnalyzeService.THREEZONESEFFECT;
 
@@ -44,9 +38,7 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_fx_demo);
 
-
-
-        receiver = new HyperionAudioVisualizerBroadcastReceiver();
+        receiver = new HyperionAudioVisualizerBR();
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
@@ -102,11 +94,9 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
         super.onResume();
 
         if(!isMyServiceRunning(AnalyzeService.class)) {
-            b.setText(getText(R.string.start));
-            spinner.setEnabled(true);
+            UpdateGui(false);
         }else{
-            b.setText(getText(R.string.stop));
-            spinner.setEnabled(false);
+           UpdateGui(true);
         }
 
     }
@@ -116,19 +106,6 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
         super.onPause();
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key=="running") {
-            boolean running = prefs.getBoolean(key, false);
-            if(running){
-                b.setText(getText(R.string.stop));
-                spinner.setEnabled(false);
-            }else{
-                b.setText(getText(R.string.start));
-                spinner.setEnabled(true);
-            }
-        }
-    }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
@@ -152,9 +129,7 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
                 }else{
                     stopService(intent);
                 }
-
         }
-
     }
 
     public void setSelectedEffect(int effect){
@@ -179,12 +154,10 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
     public void updateUI(String message){
         switch (message){
             case HyperionSocket.WS_OPEN:
-                b.setText(getText(R.string.stop));
-                spinner.setEnabled(false);
+                UpdateGui(true);
                 break;
             case HyperionSocket.WS_CLOSED:
-                b.setText(getText(R.string.start));
-                spinner.setEnabled(true);
+                UpdateGui(false);
                 break;
             case HyperionSocket.WS_ERROR:
                 break;
@@ -228,5 +201,15 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
     protected void onStop() {
         super.onStop();
         this.unregisterReceiver(receiver);
+    }
+
+    private void UpdateGui(boolean serviceRunning){
+        if(serviceRunning){
+            b.setText(getText(R.string.stop));
+            spinner.setEnabled(false);
+        }else{
+            b.setText(getText(R.string.start));
+            spinner.setEnabled(true);
+        }
     }
 }

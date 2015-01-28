@@ -8,7 +8,7 @@ import android.widget.Toast;
 /**
  * Created by devbuntu on 28.01.15.
  */
-public class HyperionAudioVisualizerBroadcastReceiver extends BroadcastReceiver {
+public class HyperionAudioVisualizerBR extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
