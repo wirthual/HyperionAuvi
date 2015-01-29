@@ -7,7 +7,7 @@
         Hyperion and play Music with "Google Play Music" or "aePlayer".
         Then you should see your Hyperion flashing to the music. Enjoy :)"</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_preference">Hyperion Audio Visualizer Settings</string>
+    <string name="title_activity_settings">Hyperion Audio Visualizer Settings</string>
     <string name="notificationTitle">Hyperion Audio Analizer</string>
     <string name="notificationText">Running.</string>
     <string name="notificationTitleAbort">Hyperion Audio Analizer</string>

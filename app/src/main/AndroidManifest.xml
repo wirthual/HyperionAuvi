@@ -28,10 +28,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MyPreferenceActivity"
-            android:label="@string/title_activity_preference" >
-        </activity>
-        <activity
             android:name="com.wirthual.hyperionauvi.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>

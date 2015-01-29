@@ -68,9 +68,7 @@ public class LevelEffect extends Effect implements Visualizer.OnDataCaptureListe
 
         for(int i=2;i<fft.length;i=i+2){
             int rfk = fft[i];
-            String real = String.valueOf(rfk);
             int ifk = fft[i+1];
-            String img = String.valueOf(ifk);
 
             float magnitude = (float) Math.sqrt((double) (rfk * rfk + ifk * ifk));
             int dbValue = (int) (10 * Math.log10(magnitude));

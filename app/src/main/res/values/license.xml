@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="license">
+<string name="license">
 <![CDATA[
 <h1>Legal info</h1>
 <p>This software uses the following components and their according licenses:</p>

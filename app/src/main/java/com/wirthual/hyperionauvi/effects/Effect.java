@@ -15,7 +15,7 @@ public abstract class Effect implements Visualizer.OnDataCaptureListener {
 
     HyperionSocket webSocketClient;
 
-    public Effect(){};
+    public Effect(){}
 
     public Effect(HyperionSocket socket){
         webSocketClient = socket;

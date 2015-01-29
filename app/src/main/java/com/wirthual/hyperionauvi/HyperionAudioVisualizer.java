@@ -38,13 +38,14 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_fx_demo);
 
+
         receiver = new HyperionAudioVisualizerBR();
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-
         config = loadPreferences();
-
         prefs.registerOnSharedPreferenceChangeListener(config);
+
+
 
         b = (Button)findViewById(R.id.button);
         b.setOnClickListener(this);
@@ -195,6 +196,7 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
         intentFilter.addAction(HyperionSocket.WS_MESSAGE);
 
         this.registerReceiver(receiver,intentFilter);
+
     }
 
     @Override
