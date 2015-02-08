@@ -2,13 +2,12 @@ package com.wirthual.hyperionauvi.effects;
 
 import android.graphics.Color;
 import android.media.audiofx.Visualizer;
-import android.util.Log;
 
+import com.wirthual.hyperionauvi.HyperionConfig;
 import com.wirthual.hyperionauvi.HyperionSocket;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,18 +19,24 @@ import java.util.List;
 public class LevelEffect extends Effect implements Visualizer.OnDataCaptureListener {
 
     final String TAG = "LevelEffect";
+    HyperionConfig config;
 
     int topBottomLeds = 0;
     int leftRightLeds = 0;
     int totalLeds = 0;
+    int offset;
+    int prio;
 
     List<Integer> colors = new ArrayList<Integer>();
 
-    public LevelEffect(HyperionSocket socket,int topBottom,int leftRight){
+    public LevelEffect(HyperionSocket socket){
         super(socket);
-        topBottomLeds = topBottom;
-        leftRightLeds = leftRight;
+       config = HyperionConfig.getInstance();
+        topBottomLeds = config.getTopBottomLeds();
+        leftRightLeds = config.getLeftRightLeds();
         totalLeds = topBottomLeds *2 + leftRightLeds * 2;
+        this.offset = config.getOffset();
+        this.prio = config.getPrio();
 
         int stepSize = 360/leftRightLeds;
         for(int i=0;i<leftRightLeds;i++){
@@ -57,6 +62,9 @@ public class LevelEffect extends Effect implements Visualizer.OnDataCaptureListe
     }
 
     @Override
+    public boolean isFFTEffect() { return true; }
+
+    @Override
     public void onWaveFormDataCapture(Visualizer visualizer, byte[] waveform, int samplingRate) {
 
     }
@@ -78,16 +86,14 @@ public class LevelEffect extends Effect implements Visualizer.OnDataCaptureListe
         Collections.sort(testList);
         Collections.reverse(testList);
         int highestMagnitude = (int)Math.round(testList.get(0));
-        Log.i("Highest Magnitude: " +highestMagnitude,TAG);
+        //Log.i("Highest Magnitude: " +highestMagnitude,TAG);
 
 
+        //int magnitude_min = 10;
+        //int magnitude_max = 180;
 
-
-        int magnitude_min = 10;
-        int magnitude_max = 190;
-
-        int norm_val = normalize(testList.get(0),magnitude_min,magnitude_max);
-        Log.i(String.valueOf(norm_val),TAG);
+        int norm_val = normalize(testList.get(0),config.getRainbow_min(),config.getRainbow_max());
+        //Log.i(String.valueOf(norm_val),TAG);
 
         int area1End = topBottomLeds;
         int area2End = topBottomLeds + leftRightLeds;
@@ -144,35 +150,10 @@ public class LevelEffect extends Effect implements Visualizer.OnDataCaptureListe
             }
         }
 
-
-        Log.i(String.valueOf(colorJson.length()), TAG);
-
-        JSONObject commandJson = new JSONObject();
-        try {
-            commandJson.put("command", "color");
-            commandJson.put("color", colorJson);
-            commandJson.put("priority", 100);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String commandString = commandJson.toString() + "\n";
-        sendData(commandString);
+        sendData(colorJson,config.getPrio());
 
     }
 
-    private void print(String s) {
-        Log.i(s, TAG);
-    }
-
-
-    private void print(String s, int i) {
-        Log.i(s + String.valueOf(i), TAG);
-    }
-
-    private int calculateFrequency(int k, int samplingrate){
-        return Math.abs((k * samplingrate)/64)/1000;
-    }
     private int normalize(float value, int min, int max) {
         if (value < min) {
             return 0;
@@ -183,6 +164,5 @@ public class LevelEffect extends Effect implements Visualizer.OnDataCaptureListe
             return (int) (((value - min) / (max - min)) * leftRightLeds);
         }
     }
-
 
 }

@@ -2,21 +2,26 @@ package com.wirthual.hyperionauvi.effects;
 
 import android.media.audiofx.Visualizer;
 
+import com.wirthual.hyperionauvi.HyperionConfig;
 import com.wirthual.hyperionauvi.HyperionSocket;
+
+import org.json.JSONArray;
 
 /**
  * Created by devbuntu on 20.01.15.
  */
 public class ThreeZonesEffect extends com.wirthual.hyperionauvi.effects.Effect implements Visualizer.OnDataCaptureListener {
 
-    String TAG = "AudioDataListener";
+    public static final String TAG = "ThreeZonesEffect";
 
-    ThreeZonesProcessor currentEffect;
+    HyperionConfig config;
+    ThreeZonesProcessor processor;
 
 
-    public ThreeZonesEffect(HyperionSocket socket,int topbottom, int leftRight) {
+    public ThreeZonesEffect(HyperionSocket socket) {
         super(socket);
-        currentEffect = new ThreeZonesProcessor(topbottom,leftRight);
+        config = HyperionConfig.getInstance();
+        processor = new ThreeZonesProcessor(config.getTopBottomLeds(),config.getLeftRightLeds());
     }
 
     @Override
@@ -26,8 +31,8 @@ public class ThreeZonesEffect extends com.wirthual.hyperionauvi.effects.Effect i
 
     @Override
     public void onFftDataCapture(Visualizer visualizer, byte[] fft, int samplingRate) {
-            String result = currentEffect.processData(fft);
-            sendData(result);
+            JSONArray result = processor.processData(fft,samplingRate);
+            super.sendData(result,config.getPrio());
     }
 
     @Override
@@ -38,6 +43,11 @@ public class ThreeZonesEffect extends com.wirthual.hyperionauvi.effects.Effect i
     @Override
     public boolean isWaveformEffect() {
         return false;
+    }
+
+    @Override
+    public boolean isFFTEffect() {
+        return true;
     }
 
 }

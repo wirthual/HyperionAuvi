@@ -1,9 +1,14 @@
-package com.wirthual.hyperionauvi;
+package com.wirthual.hyperionauvi.settings;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.widget.Toast;
+
+import com.wirthual.hyperionauvi.LicenceAcitvity;
+import com.wirthual.hyperionauvi.R;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -16,7 +21,7 @@ import android.preference.PreferenceActivity;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends PreferenceActivity implements Preference.OnPreferenceClickListener{
     /**
      * Determines whether to always show the simplified settings UI, where
      * settings are presented in a single list. When false, settings are shown
@@ -41,7 +46,31 @@ public class SettingsActivity extends PreferenceActivity {
             }
         });
 
+        Preference about= findPreference("version");
+        about.setOnPreferenceClickListener(this);
+
     }
 
+    int clickCounter = 0;
+
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+        if (clickCounter>4) {
+            Toast.makeText(this,"Got it :)",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if(clickCounter==0){
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                clickCounter=0;
+            }
+        }, 3000);
+        }
+        clickCounter ++;
+        return false;
+    }
 
 }

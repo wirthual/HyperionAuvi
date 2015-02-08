@@ -2,8 +2,8 @@
 <resources>
 
     <string name="app_name">Hyperion Auvi</string>
-    <string name="description">Welcome at Hyperion Audio Visualizer. This programm runs in the Backg
-        round and visualizes the music output of your Android device. Simply set ip-address and port of your
+    <string name="description">Welcome at Hyperion Audio Visualizer. This program runs in the Background
+        and visualizes the music output of your Android device. Simply set ip-address and port of your
         Hyperion and play Music with "Google Play Music" or "aePlayer".
         Then you should see your Hyperion flashing to the music. Enjoy :)"</string>
     <string name="action_settings">Settings</string>
@@ -12,16 +12,31 @@
     <string name="notificationText">Running.</string>
     <string name="notificationTitleAbort">Hyperion Audio Analizer</string>
     <string name="notificationTextAbort">Stopped.</string>
-    <string name="connected">Connected to Hyperion.</string>
-    <string name="cannotconnect">"Can't connect to Hyperion! \n Check IP and Port"</string>
+
     <string name="start">Start Hyperion Audio Visualization</string>
     <string name="stop">Stop Hyperion Audio Visualization</string>
     <string name="title_activity_licence_acitvity">Licences</string>
     <string name="play_music">Play Music</string>
 
+
+    <string name="gotclosed">Lost connection to Hyperion.</string>
+    <string name="connected">Connected to Hyperion.</string>
+    <string name="wserror">"Can't connect to Hyperion!Check IP and Port"</string>
+    <string name="closedconnection">"Connection closed."</string>
+
+    <string name="rainbowminmax">"Set max and min for Rainbow effect.(Default 10 180)""</string>
+    <string name="changecolorminmax">"Set max and min for Change Color effect.(Default 20 120)"</string>
+
+
+
+
+    <string name="demo_min_label">Min</string>
+    <string name="demo_max_label">Max</string>
+
     <string-array name="effects_array">
         <item>3 Zones</item>
         <item>Level Rainbow</item>
+        <item>Color Change</item>
     </string-array>
 
     <string-array name="shortcut_values">

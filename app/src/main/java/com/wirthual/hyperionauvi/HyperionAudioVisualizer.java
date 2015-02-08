@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,9 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.wirthual.hyperionauvi.service.AnalyzeService;
+import com.wirthual.hyperionauvi.settings.SettingsActivity;
+
+import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 
 public class HyperionAudioVisualizer extends ActionBarActivity implements View.OnClickListener{
@@ -30,6 +34,7 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
     Spinner spinner;
 
     HyperionAudioVisualizerBR receiver;
+    //WifiStateChangedBR wifiReceiver;
 
     int selectedEffect = AnalyzeService.THREEZONESEFFECT;
 
@@ -40,11 +45,13 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
 
 
         receiver = new HyperionAudioVisualizerBR();
+        //wifiReceiver = new WifiStateChangedBR();
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        config = loadPreferences();
-        prefs.registerOnSharedPreferenceChangeListener(config);
 
+        this.loadPreferences();
+
+        prefs.registerOnSharedPreferenceChangeListener(config);
 
 
         b = (Button)findViewById(R.id.button);
@@ -98,7 +105,7 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
             UpdateGui(false);
         }else{
            UpdateGui(true);
-        }
+    }
 
     }
 
@@ -122,21 +129,26 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
     public void onClick(View v) {
         Intent intent = new Intent(this, AnalyzeService.class);
         intent.putExtra("effect",selectedEffect);
-        intent.putExtra("config", config);
         switch (v.getId()) {
             case R.id.button:
                 if(!isMyServiceRunning(AnalyzeService.class)) {
+                    Log.i(TAG, "Start new Service from " + TAG);
                     this.getApplicationContext().startService(intent);
                 }else{
+                    Log.i(TAG, "Stop Service from " + TAG);
                     stopService(intent);
                 }
         }
+        final Button clicked = ((Button)v);
+        clicked.setEnabled(false); //Disable Button till answer form websocket arrives
     }
 
     public void setSelectedEffect(int effect){
         selectedEffect = effect;
     }
 
+
+    //http://stackoverflow.com/questions/3872063/launch-an-application-from-another-application-on-android
     public void startNewActivity(Context context, String packageName) {
         Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
         if (intent != null) {
@@ -160,17 +172,17 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
             case HyperionSocket.WS_CLOSED:
                 UpdateGui(false);
                 break;
-            case HyperionSocket.WS_ERROR:
-                break;
-            case HyperionSocket.WS_MESSAGE:
-                break;
         }
     }
 
-    private HyperionConfig loadPreferences(){
+    private void loadPreferences(){
+
+        config = HyperionConfig.getInstance();
 
         String ip   =  prefs.getString("ip", "0.0.0.0");
+        config.setIp(ip);
         String port  = prefs.getString("port", "19444");
+        config.setPort(port);
         String rate = prefs.getString("rate", "2");
 
         int intRate = Integer.valueOf(rate);
@@ -180,10 +192,16 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
         if (intRate > 100 ) {
             intRate = 100;
         }
-        int topBottomLeds = Integer.valueOf(prefs.getString("topBottom", "40"));
-        int leftRightLeds = Integer.valueOf(prefs.getString("leftRight", "24"));
+        config.setRate(intRate);
 
-        return new HyperionConfig(ip,port,leftRightLeds,topBottomLeds,intRate);
+        int topBottomLeds = Integer.valueOf(prefs.getString("topBottom", "40"));
+        config.setTopBottomLeds(topBottomLeds);
+        int leftRightLeds = Integer.valueOf(prefs.getString("leftRight", "24"));
+        config.setLeftRightLeds(leftRightLeds);
+        int prio = Integer.valueOf(prefs.getString("prio", "100"));
+        config.setPrio(prio);
+        int offset = Integer.valueOf(prefs.getString("offset", "24"));
+        config.setOffset(offset);
     }
 
     @Override
@@ -193,8 +211,8 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
         intentFilter.addAction(HyperionSocket.WS_OPEN);
         intentFilter.addAction(HyperionSocket.WS_CLOSED);
         intentFilter.addAction(HyperionSocket.WS_ERROR);
-        intentFilter.addAction(HyperionSocket.WS_MESSAGE);
-
+        intentFilter.addAction(HyperionSocket.WS_REMOTE_CLOSED);
+        intentFilter.addAction(HyperionSocket.WS_CLOSED_LOCAL);
         this.registerReceiver(receiver,intentFilter);
 
     }
@@ -203,14 +221,23 @@ public class HyperionAudioVisualizer extends ActionBarActivity implements View.O
     protected void onStop() {
         super.onStop();
         this.unregisterReceiver(receiver);
+        //this.unregisterReceiver(wifiReceiver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Crouton.cancelAllCroutons();
     }
 
     private void UpdateGui(boolean serviceRunning){
         if(serviceRunning){
             b.setText(getText(R.string.stop));
+            b.setEnabled(true);
             spinner.setEnabled(false);
         }else{
             b.setText(getText(R.string.start));
+            b.setEnabled(true);
             spinner.setEnabled(true);
         }
     }

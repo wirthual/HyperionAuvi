@@ -1,6 +1,10 @@
 package com.wirthual.hyperionauvi;
 
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.util.Log;
+
+import org.java_websocket.WebSocket;
 
 /**
  * Created by devbuntu on 27.01.15.
@@ -20,8 +24,18 @@ public class OpenWebsocketsTask extends AsyncTask<HyperionSocket,Void,Void> {
 
     @Override
     protected Void doInBackground(HyperionSocket... params) {
-            HyperionSocket s = params[0];
+            final HyperionSocket s = params[0];
             s.connect();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                if (!(s.getReadyState() == WebSocket.READYSTATE.OPEN)) {
+                    Log.i(TAG, "Closed socket because of timeout");
+                    s.close();
+                }
+            }
+        }, 2000);
         return null;
     }
 

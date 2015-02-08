@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:rsb="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ScrollView
+        android:id="@+id/SCROLLER_ID"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:padding="5dp">
+
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Set max and min values for bass (red) (Default: 20 90)"
+        />
+    <com.wirthual.hyperionauvi.utils.RangeSeekBar
+        android:id="@+id/bass_slider"
+        android:layout_width="fill_parent"
+        rsb:absoluteMinValue="1"
+        rsb:absoluteMaxValue="150"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Set max and min values for middle (green) (Default: 10 70)"
+        />
+    <com.wirthual.hyperionauvi.utils.RangeSeekBar android:layout_width="fill_parent"
+        android:id="@+id/middle_slider"
+        android:layout_height="wrap_content"
+        rsb:absoluteMinValue="1"
+        rsb:absoluteMaxValue="120"
+        />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Set max and min values for high (blue)(Default: 10 60)"
+        />
+    <com.wirthual.hyperionauvi.utils.RangeSeekBar android:layout_width="fill_parent"
+        android:id="@+id/high_slider"
+        android:layout_height="wrap_content"
+        rsb:absoluteMinValue="1"
+        rsb:absoluteMaxValue="100"
+        />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

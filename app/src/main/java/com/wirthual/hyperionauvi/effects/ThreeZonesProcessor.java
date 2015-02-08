@@ -2,14 +2,16 @@ package com.wirthual.hyperionauvi.effects;
 
 import android.util.Log;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.wirthual.hyperionauvi.HyperionConfig;
+import com.wirthual.hyperionauvi.utils.AudioUtils;
 
-import java.util.Arrays;
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Created by wirthual on 21.01.15.
@@ -18,41 +20,69 @@ public class ThreeZonesProcessor {
 
     String TAG = "ThreeZonesEffect";
     boolean debug = false;
+    HyperionConfig config;
+
 
     int topBottomLeds = 0;
     int leftRightLeds = 0;
     int totalLeds = 0;
+    int offset = 0;
+    int prio = 100;
 
-    public ThreeZonesProcessor(int topBottom, int leftRight) {
-        topBottomLeds = topBottom;
-        leftRightLeds = leftRight;
+    public ThreeZonesProcessor(int leftRightLeds,int topBottomLeds) {
+        this.topBottomLeds = topBottomLeds;
+        this.leftRightLeds = leftRightLeds;
         totalLeds = topBottomLeds *2 + leftRightLeds * 2;
     }
 
-    //Settings
-    int t_bass_min = 30;
-    int t_bass_max = 100;
-    int t_middle_min = 5;
-    int t_middle_max = 25;
-    int t_high_min = 2;
-    int t_high_max = 18;
+    public JSONArray processData(byte[] bytes,int samplingRate) {
 
-    public String processData(byte[] bytes) {
-        byte[] bass = ArrayUtils.subarray(bytes, 0, 20);
-        byte[] middle = ArrayUtils.subarray(bytes, 21, 40);
-        byte[] high = ArrayUtils.subarray(bytes, 41, 60);
+        TreeMap<Integer,Integer> map = new TreeMap<Integer,Integer>();
 
-        List bassList = Arrays.asList(ArrayUtils.toObject(bass));
-        List middleList = Arrays.asList(ArrayUtils.toObject(middle));
-        List highList = Arrays.asList(ArrayUtils.toObject(high));
 
-        byte maxBass = (byte) Collections.max(bassList);
-        byte maxMiddle = (byte) Collections.max(middleList);
-        byte maxHigh = (byte) Collections.max(highList);
+        //Byte 0 and 1 are special. See doku of Visualizer
+        int freq0 = AudioUtils.getFrequency(0, samplingRate);
+        int freqkhalf =  AudioUtils.getFrequency(bytes.length/2, samplingRate);
 
-        int normalized_max_bass = normalize_to_rgb_value(maxBass, t_bass_min, t_bass_max);
-        int normalized_max_middle = normalize_to_rgb_value(maxMiddle, t_middle_min, t_middle_max);
-        int normalized_max_high = normalize_to_rgb_value(maxHigh, t_high_min, t_high_max);
+        int mag0 = AudioUtils.getMangnitude(bytes[0],(byte)0);
+        int magk2half = AudioUtils.getMangnitude(bytes[1],(byte)0);
+
+        map.put(freq0,mag0);
+        map.put(freqkhalf,magk2half);
+
+
+        for(int i=2;i<bytes.length;i=i+2){
+            byte real = bytes[i];
+            byte imag = bytes[i+1];
+
+            int freqency = AudioUtils.getFrequency(i / 2, samplingRate);
+            int magnitude = AudioUtils.getMangnitude(real,imag);
+
+            //String output ="Nummber: " + String.valueOf(i/2) + " Realteil: " + real + " Imaginartteil: " + imag + " Frequenz: " + String.valueOf(freqency);
+            //Log.i(TAG,output);
+
+            map.put(freqency, (int) magnitude);
+        }
+
+        Collection sortedValues = map.values();
+        ArrayList<Integer> sortedList = new ArrayList<Integer>(sortedValues );
+
+        int newSize = map.size()/2;//Throw away uppest 5 values
+        int index1 = (newSize)/3;
+        int index2 = ((newSize)/3)*2;
+
+        List<Integer> bass = sortedList.subList(0,index1);
+        List<Integer> middle = sortedList.subList(index1+1,index2 );
+        List<Integer> high = sortedList.subList(index2+1, newSize);
+
+
+        int maxBass =    Collections.max(bass);
+        int maxMiddle = Collections.max(middle);
+        int maxHigh =   Collections.max(high);
+
+        int normalized_max_bass = normalize_to_rgb_value(maxBass, config.getBass_min(), config.getBass_max());
+        int normalized_max_middle = normalize_to_rgb_value(maxMiddle, config.getMiddle_min(),config.getMiddle_max());
+        int normalized_max_high = normalize_to_rgb_value(maxHigh, config.getHigh_min(), config.getHigh_max());
 
         if (debug) {
             Log.d("Max(bass) = " + maxBass, TAG);
@@ -64,7 +94,7 @@ public class ThreeZonesProcessor {
         }
 
 
-        return CreateCommandString(normalized_max_bass, normalized_max_middle, normalized_max_high);
+        return CreateColorArray(normalized_max_bass, normalized_max_middle, normalized_max_high);
     }
 
     public String getName() {
@@ -95,7 +125,7 @@ public class ThreeZonesProcessor {
     }
 
 
-    private String CreateCommandString(int normalized_max_bass, int normalized_max_middle, int normalized_max_high) {
+    private JSONArray CreateColorArray(int normalized_max_bass, int normalized_max_middle, int normalized_max_high) {
 
         int edgeOverlap = leftRightLeds / 4;
 
@@ -132,16 +162,19 @@ public class ThreeZonesProcessor {
         Log.i(String.valueOf(colorJson.length()), TAG);
         }
 
-        JSONObject commandJson = new JSONObject();
-        try {
-            commandJson.put("command", "color");
-            commandJson.put("color", colorJson);
-            commandJson.put("priority", 100);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        return colorJson;
+    }
+
+    //From http://stackoverflow.com/questions/13678387/how-to-split-array-list-into-equal-parts
+    public static <T> ArrayList<T[]> chunks(ArrayList<T> bigList,int n){
+        ArrayList<T[]> chunks = new ArrayList<T[]>();
+
+        for (int i = 0; i < bigList.size(); i += n) {
+            T[] chunk = (T[])bigList.subList(i, Math.min(bigList.size(), i + n)).toArray();
+            chunks.add(chunk);
         }
 
-        String commandString = commandJson.toString() + "\n";
-        return commandString;
+        return chunks;
     }
+
 }

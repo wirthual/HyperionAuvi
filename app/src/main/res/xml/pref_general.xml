@@ -1,4 +1,5 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="useless_key">
 
     <PreferenceCategory
         android:title="HypeAudioVisualizer Settings"
@@ -7,26 +8,37 @@
             android:key="ip"
             android:summary="IP adress of the hyperion server"
             android:title="IP adress"
-            android:defaultValue="192.168.100.101" />
+            android:inputType="number"
+            android:defaultValue="192.168.100.101"
+            android:digits="0123456789."/>
+
         <EditTextPreference
             android:key="port"
             android:summary="Port of the hyperion server"
             android:title="Port"
-            android:defaultValue="19444"/>
+            android:defaultValue="19444"
+            android:inputType="numberDecimal"
+            android:digits="0123456789"/>
+
         <EditTextPreference
             android:key="topBottom"
             android:summary="Number of Leds on Top and on Bottom"
             android:title="Top/Bottom Leds"
             android:defaultValue="40"
-            android:numeric="integer"/>
+            android:inputType="numberDecimal"
+            android:numeric="integer"
+            android:digits="0123456789"/>
 
         <EditTextPreference
             android:key="leftRight"
             android:summary="Number of Leds on the Left and on the Right"
             android:title="Left/Right Leds"
             android:numeric="integer"
+            android:inputType="numberDecimal"
             android:defaultValue="24"
+            android:digits="0123456789"
             />
+
         <EditTextPreference
             android:key="rate"
             android:summary="Value to decrease data sending. The higher the value, the lower the data-rate.\n 2 Is the fastest.
@@ -35,18 +47,59 @@
             android:numeric="integer"
             android:defaultValue="2"
             android:inputType="numberDecimal"
+            android:digits="0123456789"
             />
+
+        <EditTextPreference
+            android:key="prio"
+            android:title="Priority"
+            android:summary="Select priority of this device"
+            android:inputType="numberDecimal"
+            android:defaultValue="100"
+            android:digits="0123456789"/>
+
+
+        <PreferenceScreen
+            android:key="prefs_effect"
+            android:title="Effect Settings"
+            android:summary="Here you can play around with the settings of the effect. The lower the min value, the earlier you will see a blinking. The bigger the range between min and max, the more different intensities you will get."
+            android:persistent="false">
+
+            <com.wirthual.hyperionauvi.settings.ZonesEffectPreference
+                android:key="dialog_effect"
+                android:title="3 Zones Effect"
+                android:summary="Set min and max values for 3 Zones effect."/>
+
+            <com.wirthual.hyperionauvi.settings.RainbowEffectPreference
+                android:key="dialog_effect"
+                android:title="Rainbow Effect"
+                android:summary="Set min and max value for Rainbow effect"/>
+
+            <com.wirthual.hyperionauvi.settings.ChangeColorEffectPreference
+                android:key="dialog_effect"
+                android:title="Change Color Effect"
+                android:summary="Set min and max value for Change Color effect"/>
+
+        </PreferenceScreen>
 
         <ListPreference
             android:key="player_preference"
             android:title="Select Player Shortcut"
+            android:summary="Select witch music player should be started from play button. If you know any other players that work, let me know :)"
             android:entries="@array/shortcut_entries"
             android:entryValues="@array/shortcut_values"
-            android:defaultValue="0"/>
+            android:defaultValue="com.google.android.music"/>
+
 
         <Preference android:key="dialog_preference"
-            android:title="About"/>
+            android:title="About"
+            android:summary="Legal info"
+            />
 
+        <Preference android:key="version"
+            android:title="Version"
+            android:summary="0.1Alpha"
+            />
 
 
     </PreferenceCategory>

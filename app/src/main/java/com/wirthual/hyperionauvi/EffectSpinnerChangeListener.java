@@ -26,6 +26,8 @@ public class EffectSpinnerChangeListener implements Spinner.OnItemSelectedListen
             ((HyperionAudioVisualizer) context).setSelectedEffect(AnalyzeService.THREEZONESEFFECT);
         }else if(selected.equalsIgnoreCase("Level Rainbow")){
             ((HyperionAudioVisualizer) context).setSelectedEffect(AnalyzeService.LEVELEFFECT);
+        }else if(selected.equalsIgnoreCase("Color Change")){
+            ((HyperionAudioVisualizer) context).setSelectedEffect(AnalyzeService.COLORCHANGEEFFECT);
         }
     }
 

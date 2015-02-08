@@ -20,7 +20,8 @@
         <activity
             android:name="com.wirthual.hyperionauvi.HyperionAudioVisualizer"
             android:label="@string/app_name"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,7 +29,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.wirthual.hyperionauvi.SettingsActivity"
+            android:name=".settings.SettingsActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_settings" >
         </activity>
         <activity
