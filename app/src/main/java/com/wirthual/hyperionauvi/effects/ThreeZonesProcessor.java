@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -64,9 +63,9 @@ public class ThreeZonesProcessor {
             map.put(freqency, (int) magnitude);
         }
 
-        for(Map.Entry<Integer,Integer> entry : map.entrySet()) {
-           Log.i(TAG,String.valueOf(entry.getKey()) + " => " + String.valueOf(entry.getValue()));
-        }
+        //for(Map.Entry<Integer,Integer> entry : map.entrySet()) {
+        //   Log.i(TAG,String.valueOf(entry.getKey()) + " => " + String.valueOf(entry.getValue()));
+        //}
 
 
         Collection sortedValues = map.values();
