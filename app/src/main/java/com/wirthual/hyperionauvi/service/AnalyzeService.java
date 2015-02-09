@@ -15,10 +15,9 @@ import android.util.Log;
 import com.wirthual.hyperionauvi.HyperionAudioVisualizer;
 import com.wirthual.hyperionauvi.HyperionConfig;
 import com.wirthual.hyperionauvi.HyperionSocket;
-import com.wirthual.hyperionauvi.OpenWebsocketsTask;
 import com.wirthual.hyperionauvi.R;
+import com.wirthual.hyperionauvi.effects.BaseEffect;
 import com.wirthual.hyperionauvi.effects.ColorChangeEffect;
-import com.wirthual.hyperionauvi.effects.Effect;
 import com.wirthual.hyperionauvi.effects.LevelEffect;
 import com.wirthual.hyperionauvi.effects.ThreeZonesEffect;
 
@@ -39,8 +38,7 @@ public class AnalyzeService extends Service{
     BroadcastReceiver receiver;
     Visualizer mVisualizer;
     HyperionConfig config;
-    Effect currentEffect;
-    OpenWebsocketsTask task;
+    BaseEffect currentEffect;
     int eff;
 
     @Override
@@ -84,6 +82,9 @@ public class AnalyzeService extends Service{
         return Service.START_NOT_STICKY;
     }
 
+    /**
+     * Method is called from AnalyzeService Broadcastreceiver{@link com.wirthual.hyperionauvi.service.AnalyzeServiceBR} if Websocket was opened successfully
+     */
     public void startAnalyzing(){
         startForeground(99,makeRunningNotification()); //If service starts analyzing, bring it to foreground.
                                                        //then it doesnt stop if activity is destroyed.
@@ -122,7 +123,11 @@ public class AnalyzeService extends Service{
         Log.i("Service stopped", TAG);
     }
 
-
+    /**
+     *Method for creating a Notification. Notification is needed to bring service in Foreground.
+     * This notification is shown, as long as Service is running.
+     * @return Notification Object
+     */
     private Notification makeRunningNotification() {
         Intent notifyIntent = new Intent(this, HyperionAudioVisualizer.class);
         notifyIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

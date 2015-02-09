@@ -27,8 +27,8 @@ public class HyperionConfig implements SharedPreferences.OnSharedPreferenceChang
     int bass_max = 90;
     int middle_min = 10;
     int middle_max = 70;
-    int high_min = 10;
-    int high_max = 60;
+    int high_min = 50;
+    int high_max = 140;
 
     //Effect Rainbow
     int rainbow_min = 10;
@@ -161,6 +161,11 @@ public class HyperionConfig implements SharedPreferences.OnSharedPreferenceChang
     public void setLeftRightLeds(int leftRightLeds) {
         this.leftRightLeds = leftRightLeds;
     }
+
+    public int getTotalLeds() {
+        return topBottomLeds *2 + leftRightLeds * 2;
+    }
+
 
     public int getOffset() {
         return offset;

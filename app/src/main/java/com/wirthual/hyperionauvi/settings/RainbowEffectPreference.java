@@ -63,7 +63,7 @@ public class RainbowEffectPreference extends DialogPreference implements RangeSe
         editor.putInt("rainbow_max",maxValue);
         editor.putInt("rainbow_min",minValue);
 
-        editor.commit();
+        editor.apply();
     }
 }
 

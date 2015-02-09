@@ -12,10 +12,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 package com.wirthual.hyperionauvi.utils;
+
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -23,7 +29,9 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
+
 import com.wirthual.hyperionauvi.R;
+
 import java.math.BigDecimal;
 /**
  * Widget that lets users select a minimum and maximum value on a given numerical range.

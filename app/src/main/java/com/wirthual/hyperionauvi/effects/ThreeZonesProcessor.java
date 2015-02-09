@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -26,10 +27,9 @@ public class ThreeZonesProcessor {
     int topBottomLeds = 0;
     int leftRightLeds = 0;
     int totalLeds = 0;
-    int offset = 0;
-    int prio = 100;
 
     public ThreeZonesProcessor(int leftRightLeds,int topBottomLeds) {
+        config = HyperionConfig.getInstance();
         this.topBottomLeds = topBottomLeds;
         this.leftRightLeds = leftRightLeds;
         totalLeds = topBottomLeds *2 + leftRightLeds * 2;
@@ -41,8 +41,8 @@ public class ThreeZonesProcessor {
 
 
         //Byte 0 and 1 are special. See doku of Visualizer
-        int freq0 = AudioUtils.getFrequency(0, samplingRate);
-        int freqkhalf =  AudioUtils.getFrequency(bytes.length/2, samplingRate);
+        int freq0 = AudioUtils.getFrequency(0, samplingRate,bytes.length);
+        int freqkhalf =  AudioUtils.getFrequency(bytes.length/2, samplingRate,bytes.length);
 
         int mag0 = AudioUtils.getMangnitude(bytes[0],(byte)0);
         int magk2half = AudioUtils.getMangnitude(bytes[1],(byte)0);
@@ -51,11 +51,11 @@ public class ThreeZonesProcessor {
         map.put(freqkhalf,magk2half);
 
 
-        for(int i=2;i<bytes.length;i=i+2){
+        for(int i=2;i<bytes.length/2;i=i+2){
             byte real = bytes[i];
             byte imag = bytes[i+1];
 
-            int freqency = AudioUtils.getFrequency(i / 2, samplingRate);
+            int freqency = AudioUtils.getFrequency(i / 2, samplingRate,bytes.length);
             int magnitude = AudioUtils.getMangnitude(real,imag);
 
             //String output ="Nummber: " + String.valueOf(i/2) + " Realteil: " + real + " Imaginartteil: " + imag + " Frequenz: " + String.valueOf(freqency);
@@ -64,16 +64,21 @@ public class ThreeZonesProcessor {
             map.put(freqency, (int) magnitude);
         }
 
+        for(Map.Entry<Integer,Integer> entry : map.entrySet()) {
+           Log.i(TAG,String.valueOf(entry.getKey()) + " => " + String.valueOf(entry.getValue()));
+        }
+
+
         Collection sortedValues = map.values();
         ArrayList<Integer> sortedList = new ArrayList<Integer>(sortedValues );
 
-        int newSize = map.size()/2;//Throw away uppest 5 values
-        int index1 = (newSize)/3;
-        int index2 = ((newSize)/3)*2;
+        int newSize = map.size()/2;//take only half of the map
+        int index1 = (newSize)/3; //First third is border between bass and middle
+        int index2 = ((newSize)/3)*2; //Second third is border between middle and high
 
-        List<Integer> bass = sortedList.subList(0,index1);
-        List<Integer> middle = sortedList.subList(index1+1,index2 );
-        List<Integer> high = sortedList.subList(index2+1, newSize);
+        List<Integer> bass = sortedList.subList(0,5);
+        List<Integer> middle = sortedList.subList(6,15);
+        List<Integer> high = sortedList.subList(16, newSize);
 
 
         int maxBass =    Collections.max(bass);
@@ -92,7 +97,6 @@ public class ThreeZonesProcessor {
             Log.d("Normalized max(middle) to RGB is '" + normalized_max_middle + "'.", TAG);
             Log.d("Normalized max(high) to RGB is '" + normalized_max_high + "'.", TAG);
         }
-
 
         return CreateColorArray(normalized_max_bass, normalized_max_middle, normalized_max_high);
     }

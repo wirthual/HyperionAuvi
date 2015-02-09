@@ -50,8 +50,8 @@ public class ZonesEffectPreference extends DialogPreference implements RangeSeek
         middleSlider.setSelectedMinValue(pref.getInt("middle_min",10));
         middleSlider.setSelectedMaxValue(pref.getInt("middle_max",70));
 
-        highSlider.setSelectedMinValue(pref.getInt("high_min",10));
-        highSlider.setSelectedMaxValue(pref.getInt("high_max",60));
+        highSlider.setSelectedMinValue(pref.getInt("high_min",50));
+        highSlider.setSelectedMaxValue(pref.getInt("high_max",140));
 
         super.onBindDialogView(view);
     }
@@ -80,7 +80,7 @@ public class ZonesEffectPreference extends DialogPreference implements RangeSeek
                 editor.putInt("high_min",(Integer) bar.getSelectedMinValue());
                 editor.putInt("high_max",(Integer) bar.getSelectedMaxValue());
                 break;
-        };
-        editor.commit();
+        }
+        editor.apply();
     }
 }

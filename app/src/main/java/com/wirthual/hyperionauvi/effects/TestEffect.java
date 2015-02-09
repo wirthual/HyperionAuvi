@@ -3,7 +3,10 @@ package com.wirthual.hyperionauvi.effects;
 import android.media.audiofx.Visualizer;
 import android.util.Log;
 
+import com.wirthual.hyperionauvi.HyperionConfig;
 import com.wirthual.hyperionauvi.utils.AudioUtils;
+
+import org.json.JSONArray;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -11,9 +14,10 @@ import java.util.TreeMap;
 /**
  * Created by devbuntu on 23.01.15.
  */
-public class TestEffect extends Effect implements Visualizer.OnDataCaptureListener {
+public class TestEffect extends BaseEffect implements Visualizer.OnDataCaptureListener {
 
     final String TAG = "TestEffect";
+    HyperionConfig config = HyperionConfig.getInstance();
 
     @Override
     public String getName() {
@@ -42,10 +46,11 @@ public class TestEffect extends Effect implements Visualizer.OnDataCaptureListen
 
         TreeMap<Integer,Integer> map = new TreeMap<Integer,Integer>();
 
+        //
         print("Realteil 0: " + fft[0]);
-        int freq = AudioUtils.getFrequency(0, samplingRate);
+        int freq = AudioUtils.getFrequency(0, samplingRate,fft.length);
         print("Realteil k: " + fft[1]);
-        int freqk = AudioUtils.getFrequency(fft.length / 2, samplingRate);
+        int freqk = AudioUtils.getFrequency(fft.length / 2, samplingRate,fft.length);
 
         //For first and last value there is no imag-Part, so we use Real-Part directly
         map.put(freq,(int)fft[0]);
@@ -58,7 +63,7 @@ public class TestEffect extends Effect implements Visualizer.OnDataCaptureListen
             int ifk = fft[i+1];
             String img = String.valueOf(ifk);
 
-            int freqency = AudioUtils.getFrequency(i / 2, samplingRate);
+            int freqency = AudioUtils.getFrequency(i / 2, samplingRate,fft.length);
 
             float magnitude = (float) Math.sqrt((double) (rfk * rfk + ifk * ifk));
             int dbValue = (int) (10 * Math.log10(magnitude));
@@ -72,6 +77,17 @@ public class TestEffect extends Effect implements Visualizer.OnDataCaptureListen
         for(Map.Entry<Integer,Integer> entry : map.entrySet()) {
             print(String.valueOf(entry.getKey()) + " => " + String.valueOf(entry.getValue()));
         }
+
+        //Ok, no matter whats the result above, for this easy example create just green leds
+        JSONArray colorJson = new JSONArray();
+        for (int i = 0; i < config.getTotalLeds(); i++) {
+            colorJson.put(0); //red
+            colorJson.put(255); //green
+            colorJson.put(0); //blue
+        }
+
+        //Send it to hyperion with method from super-class. easy as that
+        super.sendData(colorJson,config.getPrio());
 
     }
 

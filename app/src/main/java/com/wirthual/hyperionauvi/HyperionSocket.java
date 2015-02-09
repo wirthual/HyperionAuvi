@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
@@ -32,7 +31,7 @@ public class HyperionSocket extends WebSocketClient {
     boolean connected = false;
 
     public HyperionSocket(Context context,URI uri){
-        super(uri,new Draft_17(),null,1000);
+        super(uri);
         this.uri = uri;
         this.context = context;
     }

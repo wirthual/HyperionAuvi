@@ -32,8 +32,6 @@ public class AnalyzeServiceBR extends BroadcastReceiver {
             case HyperionSocket.WS_CLOSED_LOCAL:
                 ((AnalyzeService)context).stopSelf();
                 break;
-            case HyperionSocket.WS_MESSAGE:
-                break;
             case HyperionSocket.WS_REMOTE_CLOSED:
                 ((AnalyzeService)context).stopSelf();
                 break;

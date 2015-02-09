@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by devbuntu on 23.01.15.
  */
-public class ColorChangeEffect extends Effect implements Visualizer.OnDataCaptureListener {
+public class ColorChangeEffect extends BaseEffect implements Visualizer.OnDataCaptureListener {
 
     public static final String TAG = "ColorChangeEffect";
 
@@ -127,7 +127,6 @@ public class ColorChangeEffect extends Effect implements Visualizer.OnDataCaptur
         }
 
         //Log.i(String.valueOf(colorJson.length()), TAG);
-
         super.sendData(colorJson, config.getPrio());
     }
 

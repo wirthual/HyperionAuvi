@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by devbuntu on 23.01.15.
  */
-public class LevelEffect extends Effect implements Visualizer.OnDataCaptureListener {
+public class LevelEffect extends BaseEffect implements Visualizer.OnDataCaptureListener {
 
     final String TAG = "LevelEffect";
     HyperionConfig config;

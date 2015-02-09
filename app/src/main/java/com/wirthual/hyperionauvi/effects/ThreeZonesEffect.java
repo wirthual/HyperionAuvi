@@ -10,7 +10,7 @@ import org.json.JSONArray;
 /**
  * Created by devbuntu on 20.01.15.
  */
-public class ThreeZonesEffect extends com.wirthual.hyperionauvi.effects.Effect implements Visualizer.OnDataCaptureListener {
+public class ThreeZonesEffect extends BaseEffect implements Visualizer.OnDataCaptureListener {
 
     public static final String TAG = "ThreeZonesEffect";
 
@@ -21,7 +21,7 @@ public class ThreeZonesEffect extends com.wirthual.hyperionauvi.effects.Effect i
     public ThreeZonesEffect(HyperionSocket socket) {
         super(socket);
         config = HyperionConfig.getInstance();
-        processor = new ThreeZonesProcessor(config.getTopBottomLeds(),config.getLeftRightLeds());
+        processor = new ThreeZonesProcessor(config.getLeftRightLeds(),config.getTopBottomLeds());
     }
 
     @Override

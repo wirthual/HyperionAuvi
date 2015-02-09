@@ -63,7 +63,7 @@ public class ChangeColorEffectPreference extends DialogPreference implements Ran
         editor.putInt("changecolor_max",maxValue);
         editor.putInt("changecolor_min",minValue);
 
-        editor.commit();
+        editor.apply();
     }
 }
 

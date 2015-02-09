@@ -15,14 +15,14 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:padding="5dp">
 
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Set max and min values for bass (red) (Default: 20 90)"
+        android:text="@string/bassminmax"
         />
     <com.wirthual.hyperionauvi.utils.RangeSeekBar
         android:id="@+id/bass_slider"
@@ -33,7 +33,7 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Set max and min values for middle (green) (Default: 10 70)"
+        android:text="@string/middleminmax"
         />
     <com.wirthual.hyperionauvi.utils.RangeSeekBar android:layout_width="fill_parent"
         android:id="@+id/middle_slider"
@@ -44,13 +44,13 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Set max and min values for high (blue)(Default: 10 60)"
+        android:text="@string/highminmax"
         />
     <com.wirthual.hyperionauvi.utils.RangeSeekBar android:layout_width="fill_parent"
         android:id="@+id/high_slider"
         android:layout_height="wrap_content"
         rsb:absoluteMinValue="1"
-        rsb:absoluteMaxValue="100"
+        rsb:absoluteMaxValue="150"
         />
 
         </LinearLayout>

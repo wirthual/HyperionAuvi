@@ -9,9 +9,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Hyperion Audio Visualizer Settings</string>
     <string name="notificationTitle">Hyperion Audio Analizer</string>
-    <string name="notificationText">Running.</string>
-    <string name="notificationTitleAbort">Hyperion Audio Analizer</string>
-    <string name="notificationTextAbort">Stopped.</string>
+    <string name="notificationText">Analyzing.</string>
 
     <string name="start">Start Hyperion Audio Visualization</string>
     <string name="stop">Stop Hyperion Audio Visualization</string>
@@ -26,6 +24,10 @@
 
     <string name="rainbowminmax">"Set max and min for Rainbow effect.(Default 10 180)""</string>
     <string name="changecolorminmax">"Set max and min for Change Color effect.(Default 20 120)"</string>
+
+    <string name="bassminmax">"Set max and min values for bass (red) (Default: 20 90)"</string>
+    <string name="middleminmax">"Set max and min values for middle (green) (Default: 10 70)"</string>
+    <string name="highminmax">"Set max and min values for high (blue)(Default: 50 140)"</string>
 
 
 
